@@ -2,34 +2,13 @@ import React from 'react';
 import {Text, TextInput, TouchableOpacity, StatusBar, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import PaginaBase from '../PaginaBase';
 
-export default function Home({navigation}) {
+export default function Catlogo({navigation}) {
     const [email, onChangeEmail] = React.useState('');
     const [senha, onChangeSenha] = React.useState('');
 
     return (
         <PaginaBase>
-            <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <StatusBar/>
-                <Text style={styles.texto}>Login</Text>
-                <TextInput
-                style={styles.input}
-                onChangeText={onChangeEmail}
-                value={email}
-                placeholder="E-mail"
-                placeholderTextColor={'#575757'}>
-                </TextInput>
-                <TextInput
-                style={styles.input}
-                onChangeText={onChangeSenha}
-                value={senha}
-                placeholder="Senha"
-                placeholderTextColor={'#575757'}>
-                </TextInput>
-                <Text style={styles.textoSenha}>Esqueceu sua senha?</Text>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.textoBotao}>Entrar</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+
         </PaginaBase>
     );
 }

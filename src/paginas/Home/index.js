@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Image, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 // import PaginaBase from '../PaginaBase';
 
 export default function Home({navigation}) {
@@ -20,6 +23,7 @@ export default function Home({navigation}) {
     );
 }
 
+const BUTTONWIDTH = 300;
 const styles = StyleSheet.create({
     container: {
         backgroundColor : '#EB2F3D', 
@@ -30,8 +34,10 @@ const styles = StyleSheet.create({
         margin: 'auto'
     },
     containerButton:{
-        marginBottom: 100,
-        gap: 16
+        gap: 16,
+        position: 'absolute',
+        bottom: 50,
+        left: (windowWidth/2) - (BUTTONWIDTH/2) ,
     },
     button: {
         borderRadius: 16,
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 4, // Adiciona a elevação para sombra no Android
         padding: 10, // Pode ser ajustado conforme necessário
-        width: 300,
+        width: BUTTONWIDTH,
         alignSelf: 'center',
         height: 53,
         justifyContent: 'center'
