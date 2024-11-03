@@ -1,15 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, Modal, Button, ScrollView } from 'react-native';
 import { API_KEY, API_URL } from '@env';
 import PaginaBase from '../PaginaBase';
 import styles from './estilos';
 
+const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${API_KEY}`
+    }
+};
+
 export default function Catalogo() {
+
     const [filmes, setFilmes] = useState([]);
     const [pagina, setPagina] = useState(1);
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
     const [idioma, setIdioma] = useState('pt-BR');
+    
+    // Estados para controlar o modal
+    const [modalContent, setModalContent] = useState(null);
 
     useEffect(() => {
         fetchCategorias();
@@ -19,31 +31,22 @@ export default function Catalogo() {
         fetchFilmes();
     }, [pagina, categoriaSelecionada]); 
 
+    // Buscas na API
     const fetchFilmes = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${API_KEY}`
-            }
-        };
 
         try {
-            // Verificar se a pesquisa é por categoria
             const url = categoriaSelecionada
                 ? `${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=${categoriaSelecionada.id}&page=${pagina}&language=${idioma}`
-                : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`; // Corrigido aqui
+                : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`;
 
-            // Buscar lista de filmes
-            const response = await fetch(url, options); // Utilize a URL definida acima
+            const response = await fetch(url, options);
             const data = await response.json();
             const filmesComDiretores = await Promise.all(
                 data.results.map(async (filme) => {
-                    // Buscar o diretor para cada filme
                     const diretor = await fetchDiretor(filme.id, options);
                     return {
                         ...filme,
-                        diretor: diretor || 'Desconhecido',
+                        diretor: diretor || 'Indisponível',
                     };
                 })
             );
@@ -58,12 +61,11 @@ export default function Catalogo() {
         }
     };
 
-    // Função para buscar o diretor de um filme específico
     const fetchDiretor = async (filmeId, options) => {
         try {
             const response = await fetch(`${API_URL}/movie/${filmeId}/credits`, options);
             const data = await response.json();
-            const diretorInfo = data.crew.find((membro) => membro.job === 'Director');
+            const diretorInfo = data.crew.find((membro) => membro.job === 'Writing');
             return diretorInfo ? diretorInfo.name : null;
         } catch (error) {
             console.error(error);
@@ -72,18 +74,11 @@ export default function Catalogo() {
     };
 
     const fetchCategorias = async () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${API_KEY}`
-            }
-        };
 
         try {
             const response = await fetch(`${API_URL}/genre/movie/list?api_key=${API_KEY}&language=${idioma}`, options);
             const data = await response.json();
-            setCategorias(data.genres); // Define as categorias retornadas
+            setCategorias(data.genres);
         } catch (error) {
             console.error(error);
         }
@@ -91,26 +86,39 @@ export default function Catalogo() {
 
     const handleSelectCategoria = (categoria) => {
         if (categoriaSelecionada?.id === categoria.id) return;
-        setCategoriaSelecionada(categoria); // Define a categoria selecionada
-        setPagina(1); // Reinicia a página
-        setFilmes([]); // Limpa a lista de filmes
+        setCategoriaSelecionada(categoria);
+        setPagina(1);
+        setFilmes([]);
     };
 
-    useEffect(() => {
-        fetchFilmes();
-    }, []);
-
+    // Busca detalhes do filme
+    const fetchDetalhesFilme = async (filmeId, options) => {
+        try {
+            const response = await fetch(`${API_URL}/movie/${filmeId}?api_key=${API_KEY}&language=${idioma}`, options);
+            const data = await response.json();
+            return {
+                ...data,
+                runtime: data.runtime // Duração em minutos
+            };
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    };
+    
+    // Filme da lista
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.filmeContainer}>
+        <TouchableOpacity style={styles.filmeContainer} onPress={() => openModal(item.id)}>
             <Image
                 source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
                 style={styles.imagem}
             />
             <Text style={styles.titulo}>{item.title}</Text>
-            <Text style={styles.diretor}>Diretor: {item.diretor || "Desconhecido"}</Text>
+            <Text style={styles.diretor}>Diretor: {item.diretor || "Indisponível"}</Text>
         </TouchableOpacity>
     );
 
+    // Categorias
     const renderCategoria = ({ item }) => (
         <TouchableOpacity 
             style={[styles.navItem, categoriaSelecionada?.id === item.id && styles.navItemSelected]}
@@ -120,39 +128,90 @@ export default function Catalogo() {
         </TouchableOpacity>
     );
 
-    const NavBar = ({ categorias, onSelectCategoria }) => {
+    // Lista de categorias
+    const NavBar = ({ categorias }) => {
         return (
             <FlatList
                 data={categorias}
-                horizontal // Permite rolagem horizontal
+                horizontal
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderCategoria}
-                showsHorizontalScrollIndicator={false} // Remove a barra de rolagem
-                contentContainerStyle={styles.navBar} // Para centralizar e estilizar a navBar
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.navBar}
             />
         );
     };
 
+    // Detalhe do filme
+    const openModal = async (filme) => {
+        console.log(filme)
+
+        const detalheFilme = await fetchDetalhesFilme(filme, options);
+        console.log(JSON.stringify(detalheFilme, null, 2))
+        
+        const dataFormatada = new Date(detalheFilme.release_date)
+        .toLocaleDateString(idioma, {
+            day: "2-digit",
+            month: "long", 
+            year: "numeric"
+        });
+
+        console.log(dataFormatada)
+        setModalContent(
+            <Modal
+            visible={true}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setModalContent(null)}
+        >
+            <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                    <Image
+                        source={{ uri: `https://image.tmdb.org/t/p/w500${detalheFilme.poster_path}` }}
+                        style={styles.imagemModal}
+                    />
+
+                    {/* ScrollView para textos */}
+                    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+                        <Text style={styles.modalTitle}>{detalheFilme.title}</Text>
+                        {detalheFilme.tagline && (<Text style={styles.modalData}>{detalheFilme.tagline}</Text>)}
+                        <Text style={styles.modalData}>{dataFormatada}</Text>
+                        <Text style={styles.modalOverview}>{detalheFilme.overview}</Text>
+                        <Text style={styles.modalCategorias}>Categorias: {detalheFilme.genres.map(genre => genre.name).join(", ")}</Text>
+                    </ScrollView>
+
+                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalContent(null)}>
+                        <Text style={styles.textoBotao}>Fechar</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+        );
+    };
+
+
     const handleLoadMore = () => {
-        // Incrementa a página para buscar mais filmes
         setPagina((prevPagina) => prevPagina + 1);
     };
 
     return (
         <PaginaBase>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <NavBar categorias={categorias} onSelectCategoria={handleSelectCategoria} />
+                <NavBar categorias={categorias} />
                 <FlatList
                     style={styles.listaFilmes}
                     data={filmes}
                     keyExtractor={(item) => item.id.toString()} 
                     renderItem={renderItem}
-                    numColumns={2}  // Define duas colunas
+                    numColumns={2}
                     contentContainerStyle={styles.lista}
-                    onEndReached={handleLoadMore} // Chama a função quando chega ao final
-                    onEndReachedThreshold={0.1} // Define o quanto antes deve ser chamado (0 a 1)   
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={0.7}   
                 />
+                
+                {modalContent}
             </KeyboardAvoidingView>
         </PaginaBase>
     );
 }
+
