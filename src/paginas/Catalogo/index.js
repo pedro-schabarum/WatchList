@@ -44,7 +44,7 @@ export default function Catalogo() {
                 : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`;
             
             if (searchText) {
-                setCategoriaSelecionada()
+                setCategoriaSelecionada(null)
                 // URL de pesquisa com o termo digitado
                 url = `${API_URL}/search/movie?api_key=${API_KEY}&query=${searchText}&page=${pagina}&language=${idioma}`;
             }
@@ -205,7 +205,7 @@ export default function Catalogo() {
     };
 
     const handleSearch = () => {
-        if (!searchText) return;
+        if (searchText.trim() == '') return;
         setPagina(1);
         setFilmes([]);
         setSearchTriggered((prev) => !prev); // Altera searchTriggered para disparar nova busca

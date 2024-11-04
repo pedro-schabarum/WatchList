@@ -42,7 +42,7 @@ export default function Cadastro({navigation}) {
                         style={styles.input}
                         onChangeText={onChangeConfirmaSenha}
                         value={confirmaSenha}
-                        placeholder="Repita a senha criada acima"
+                        placeholder="Confirme a senha"
                         placeholderTextColor={'#575757'}
                     />
 
