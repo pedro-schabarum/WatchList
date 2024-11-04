@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, ScrollView, TextInput, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard  } from 'react-native';
 import { API_KEY, API_URL } from '@env';
 import PaginaBase from '../PaginaBase';
 import styles from './estilos';
-
-const DEBOUNCE_DELAY = 500;
+import Cabecalho from './Cabecalho/Pesquisa';
+import Categorias from './Cabecalho/Categorias';
+import Lista from './Lista';
 
 const options = {
     method: 'GET',
@@ -44,7 +45,7 @@ export default function Catalogo() {
                 : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`;
             
             if (searchText) {
-                setCategoriaSelecionada(null)
+                Keyboard.dismiss();
                 // URL de pesquisa com o termo digitado
                 url = `${API_URL}/search/movie?api_key=${API_KEY}&query=${searchText}&page=${pagina}&language=${idioma}`;
             }
@@ -98,6 +99,7 @@ export default function Catalogo() {
             setCategoriaSelecionada(null);
         } else {
             setCategoriaSelecionada(categoria);
+            console.log(searchText)
             setSearchText('')
             setPagina(1);
             setFilmes([]);
@@ -117,44 +119,7 @@ export default function Catalogo() {
             console.error(error);
             return null;
         }
-    };
-    
-    // Filme da lista
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.filmeContainer} onPress={() => openModal(item.id)}>
-            <Image
-                source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
-                style={styles.imagem}
-            />
-            <Text style={styles.titulo}>{item.title}</Text>
-            <Text style={styles.diretor}>Diretor: {item.diretor || "Indisponível"}</Text>
-        </TouchableOpacity>
-    );
-
-    // Categorias
-    const renderCategoria = ({ item }) => (
-        <TouchableOpacity 
-            style={[styles.navItem, categoriaSelecionada?.id === item.id && styles.navItemSelected]}
-            onPress={() => handleSelectCategoria(item)}
-        >
-            <Text style={styles.navText}>{item.name}</Text>
-        </TouchableOpacity>
-    );
-
-    // Lista de categorias
-    const NavBar = ({ categorias }) => {
-        return (
-            <FlatList
-                data={categorias}
-                horizontal
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderCategoria}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.navBar}
-                extraData={categoriaSelecionada} 
-            />
-        );
-    };
+    };   
 
     // Detalhe do filme
     const openModal = async (filme) => {
@@ -205,36 +170,32 @@ export default function Catalogo() {
     };
 
     const handleSearch = () => {
+        console.log(searchText)
         if (searchText.trim() == '') return;
         setPagina(1);
         setFilmes([]);
+        setCategoriaSelecionada(null) 
         setSearchTriggered((prev) => !prev); // Altera searchTriggered para disparar nova busca
     };
 
     return (
         <PaginaBase>
-            <View>
-                <View style={styles.Pesquisa}>
-                    <TextInput
-                        style={styles.barraPesquisa} // Adicione um estilo adequado para a barra de pesquisa
-                        placeholder="Buscar filmes..."
-                        placeholderTextColor={'#575757'}
-                        value={searchText}
-                        onChangeText={setSearchText}
-                    />
-                    <TouchableOpacity style={styles.buttonPesquisa} onPress={handleSearch}>
-                        <Text style={styles.buttonText}>Buscar</Text>
-                    </TouchableOpacity>
-                </View>
-                <NavBar categorias={categorias} />
+            <View style={styles.cabecalho}>
+                <Cabecalho
+                    value={searchText}
+                    onChangeText={setSearchText}
+                    onSearch={handleSearch}
+                />
+                <Categorias 
+                    categorias={categorias}
+                    categoriaSelecionada={categoriaSelecionada}
+                    handleSelectCategoria={handleSelectCategoria} 
+                />
             </View>
-            <FlatList
-                data={filmes}
-                keyExtractor={(item) => item.id.toString()} 
-                renderItem={renderItem}
-                numColumns={2}
-                onEndReached={handleLoadMore}
-                onEndReachedThreshold={0.7}   
+            <Lista
+                filmes={filmes}
+                openModal={openModal}
+                handleLoadMore={handleLoadMore}
             />
             {modalContent}
         </PaginaBase>

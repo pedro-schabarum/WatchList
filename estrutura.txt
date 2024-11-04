@@ -1,0 +1,23 @@
+src/
+├── components/             # Componentes reutilizáveis
+│   ├── NavBar/
+│   │   ├── NavBar.js       # Componente da barra de navegação de categorias
+│   │   └── styles.js       # Estilos específicos para a NavBar
+│   ├── MovieCard/
+│   │   ├── MovieCard.js    # Componente para exibir informações do filme
+│   │   └── styles.js
+│   └── SearchBar/
+│       ├── SearchBar.js    # Componente da barra de busca
+│       └── styles.js
+├── screens/                # Telas principais
+│   ├── Catalog/
+│   │   ├── Catalog.js      # Tela principal do catálogo
+│   │   └── styles.js
+│   └── MovieDetail/
+│       ├── MovieDetail.js  # Tela de detalhes do filme
+│       └── styles.js
+├── services/               # Serviços de API
+│   ├── api.js              # Configuração e funções para chamadas à API
+├── utils/                  # Utilitários e funções auxiliares
+│   └── helpers.js          # Funções auxiliares
+└── App.js                  # Ponto de entrada da aplicação

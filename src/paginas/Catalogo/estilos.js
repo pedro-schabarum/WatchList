@@ -29,59 +29,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // marginTop: 53
     },
-    titulo: {
-        fontFamily: 'InterMedium',
-        color: "#FFF",
-        fontSize: 16,
-        flexWrap: 'wrap',
-        width: 200,
-        paddingTop: 8,
-        paddingLeft: 8,
-    },
-    diretor: {
-        fontSize: 14,
-        color: '#555',
-        marginBottom: 10,
-        paddingTop: 5,
-        paddingLeft: 8,
-    },
-    imagem: {
-        width: 200,
-        height: 300,
-        borderRadius: 10,
-    },
-    filmeContainer: {
-        marginHorizontal: 0
-    },
-    // estilo das categorias
-    navBar: {
-        height: 48,
-        marginVertical: 16,
-        marginLeft: 8,
-        paddingRight: 16,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        gap: 12,    
-        alignSelf: 'center'
-    },
-    navItem: {
-        backgroundColor: '#1E1E1E',
-        borderRadius: 4,
-        // height: 32,
-        alignSelf: 'center',
 
-    },
-    navItemSelected: {
-        backgroundColor: '#EB2F3D', // Cor para o botão selecionado
-    },
-    navText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontFamily: 'PoppinsMedium',
-        alignSelf: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 8
-    },
+
+
+    // estilo das categorias
+    
 
     // Modal
     modalContainer: {
@@ -182,46 +134,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         textAlign: 'center',
-    },
-    // Barra de pesquisas
-    Pesquisa:{
-        marginTop: 48,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginHorizontal: 8
-    },
-    barraPesquisa: {
-        width: '80%',
-        fontSize: 14,
-        color: '#FFF',
-        height: 49,
-        borderWidth: 1,
-        borderColor: '#2A2A2A',
-        borderTopLeftRadius: 16,
-        borderBottomLeftRadius: 16,
-        padding: 16,
-    },
-    buttonPesquisa: {
-        borderTopRightRadius: 16,
-        borderBottomRightRadius: 16,
-        backgroundColor: '#EB2F3D', // Pode ser ajustado conforme necessário
-        shadowColor: 'rgba(0, 0, 0, 0.12)',
-        shadowOffset: {
-            width: 2,
-            height: 2,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 4,
-        elevation: 4, // Adiciona a elevação para sombra no Android
-        alignSelf: 'center',
-        height: 49,
-        justifyContent: 'center',
-        width: '20%',
-    },
-    buttonText:{
-        color: '#fff',
-        alignSelf: 'center'
     }
 });
 
