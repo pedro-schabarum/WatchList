@@ -44,6 +44,7 @@ export default function Catalogo() {
                 : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`;
             
             if (searchText) {
+                setCategoriaSelecionada()
                 // URL de pesquisa com o termo digitado
                 url = `${API_URL}/search/movie?api_key=${API_KEY}&query=${searchText}&page=${pagina}&language=${idioma}`;
             }
@@ -95,11 +96,12 @@ export default function Catalogo() {
     const handleSelectCategoria = (categoria) => {
         if (categoriaSelecionada?.id === categoria.id){
             setCategoriaSelecionada(null);
-            return
-        } 
-        setCategoriaSelecionada(categoria);
-        setPagina(1);
-        setFilmes([]);
+        } else {
+            setCategoriaSelecionada(categoria);
+            setSearchText('')
+            setPagina(1);
+            setFilmes([]);
+        }
     };
 
     // Busca detalhes do filme
@@ -211,35 +213,30 @@ export default function Catalogo() {
 
     return (
         <PaginaBase>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View>
-                    <View style={styles.Pesquisa}>
-                        <TextInput
-                            style={styles.barraPesquisa} // Adicione um estilo adequado para a barra de pesquisa
-                            placeholder="Buscar filmes..."
-                            placeholderTextColor={'#575757'}
-                            value={searchText}
-                            onChangeText={setSearchText}
-                        />
-                        <TouchableOpacity style={styles.buttonPesquisa} onPress={handleSearch}>
-                            <Text style={styles.buttonText}>Buscar</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <NavBar categorias={categorias} />
+            <View>
+                <View style={styles.Pesquisa}>
+                    <TextInput
+                        style={styles.barraPesquisa} // Adicione um estilo adequado para a barra de pesquisa
+                        placeholder="Buscar filmes..."
+                        placeholderTextColor={'#575757'}
+                        value={searchText}
+                        onChangeText={setSearchText}
+                    />
+                    <TouchableOpacity style={styles.buttonPesquisa} onPress={handleSearch}>
+                        <Text style={styles.buttonText}>Buscar</Text>
+                    </TouchableOpacity>
                 </View>
-                <FlatList
-                    style={styles.listaFilmes}
-                    data={filmes}
-                    keyExtractor={(item) => item.id.toString()} 
-                    renderItem={renderItem}
-                    numColumns={2}
-                    contentContainerStyle={styles.lista}
-                    onEndReached={handleLoadMore}
-                    onEndReachedThreshold={0.7}   
-                />
-                
-                {modalContent}
-            </KeyboardAvoidingView>
+                <NavBar categorias={categorias} />
+            </View>
+            <FlatList
+                data={filmes}
+                keyExtractor={(item) => item.id.toString()} 
+                renderItem={renderItem}
+                numColumns={2}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.7}   
+            />
+            {modalContent}
         </PaginaBase>
     );
 }

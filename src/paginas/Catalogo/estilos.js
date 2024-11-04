@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
         height: 300,
         borderRadius: 10,
     },
+    filmeContainer: {
+        marginHorizontal: 0
+    },
     // estilo das categorias
     navBar: {
         height: 48,
