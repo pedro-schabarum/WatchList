@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, Modal, Button, ScrollView } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, Image, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, ScrollView, TextInput, Button } from 'react-native';
 import { API_KEY, API_URL } from '@env';
 import PaginaBase from '../PaginaBase';
 import styles from './estilos';
+
+const DEBOUNCE_DELAY = 500;
 
 const options = {
     method: 'GET',
@@ -19,7 +21,9 @@ export default function Catalogo() {
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
     const [idioma, setIdioma] = useState('pt-BR');
-    
+    const [searchText, setSearchText] = useState('');
+    const [searchTriggered, setSearchTriggered] = useState(false);
+
     // Estados para controlar o modal
     const [modalContent, setModalContent] = useState(null);
 
@@ -29,15 +33,20 @@ export default function Catalogo() {
 
     useEffect(() => {
         fetchFilmes();
-    }, [pagina, categoriaSelecionada]); 
+    }, [pagina, categoriaSelecionada, searchTriggered]); 
 
     // Buscas na API
     const fetchFilmes = async () => {
 
         try {
-            const url = categoriaSelecionada
+            let url = categoriaSelecionada
                 ? `${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=${categoriaSelecionada.id}&page=${pagina}&language=${idioma}`
                 : `${API_URL}/movie/popular?page=${pagina}&language=${idioma}`;
+            
+            if (searchText) {
+                // URL de pesquisa com o termo digitado
+                url = `${API_URL}/search/movie?api_key=${API_KEY}&query=${searchText}&page=${pagina}&language=${idioma}`;
+            }
 
             const response = await fetch(url, options);
             const data = await response.json();
@@ -54,7 +63,7 @@ export default function Catalogo() {
                 const novosFilmes = data.results.filter(filme => 
                     !prevFilmes.some(prevFilme => prevFilme.id === filme.id)
                 );
-                return [...prevFilmes, ...novosFilmes];
+                return pagina === 1 ? novosFilmes : [...prevFilmes, ...novosFilmes];
             });
         } catch (error) {
             console.error(error);
@@ -74,7 +83,6 @@ export default function Catalogo() {
     };
 
     const fetchCategorias = async () => {
-
         try {
             const response = await fetch(`${API_URL}/genre/movie/list?api_key=${API_KEY}&language=${idioma}`, options);
             const data = await response.json();
@@ -85,7 +93,10 @@ export default function Catalogo() {
     };
 
     const handleSelectCategoria = (categoria) => {
-        if (categoriaSelecionada?.id === categoria.id) return;
+        if (categoriaSelecionada?.id === categoria.id){
+            setCategoriaSelecionada(null);
+            return
+        } 
         setCategoriaSelecionada(categoria);
         setPagina(1);
         setFilmes([]);
@@ -138,16 +149,14 @@ export default function Catalogo() {
                 renderItem={renderCategoria}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.navBar}
+                extraData={categoriaSelecionada} 
             />
         );
     };
 
     // Detalhe do filme
     const openModal = async (filme) => {
-        console.log(filme)
-
         const detalheFilme = await fetchDetalhesFilme(filme, options);
-        console.log(JSON.stringify(detalheFilme, null, 2))
         
         const dataFormatada = new Date(detalheFilme.release_date)
         .toLocaleDateString(idioma, {
@@ -156,7 +165,6 @@ export default function Catalogo() {
             year: "numeric"
         });
 
-        console.log(dataFormatada)
         setModalContent(
             <Modal
             visible={true}
@@ -194,10 +202,31 @@ export default function Catalogo() {
         setPagina((prevPagina) => prevPagina + 1);
     };
 
+    const handleSearch = () => {
+        if (!searchText) return;
+        setPagina(1);
+        setFilmes([]);
+        setSearchTriggered((prev) => !prev); // Altera searchTriggered para disparar nova busca
+    };
+
     return (
         <PaginaBase>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <NavBar categorias={categorias} />
+                <View>
+                    <View style={styles.Pesquisa}>
+                        <TextInput
+                            style={styles.barraPesquisa} // Adicione um estilo adequado para a barra de pesquisa
+                            placeholder="Buscar filmes..."
+                            placeholderTextColor={'#575757'}
+                            value={searchText}
+                            onChangeText={setSearchText}
+                        />
+                        <TouchableOpacity style={styles.buttonPesquisa} onPress={handleSearch}>
+                            <Text style={styles.buttonText}>Buscar</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <NavBar categorias={categorias} />
+                </View>
                 <FlatList
                     style={styles.listaFilmes}
                     data={filmes}
@@ -214,4 +243,3 @@ export default function Catalogo() {
         </PaginaBase>
     );
 }
-

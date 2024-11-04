@@ -53,12 +53,13 @@ const styles = StyleSheet.create({
     // estilo das categorias
     navBar: {
         height: 48,
-        marginTop: 40,
-        marginBottom: 20,
+        marginVertical: 16,
         marginLeft: 8,
+        paddingRight: 16,
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        gap: 16
+        justifyContent: 'flex-start',
+        gap: 12,    
+        alignSelf: 'center'
     },
     navItem: {
         backgroundColor: '#1E1E1E',
@@ -179,6 +180,46 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
     },
+    // Barra de pesquisas
+    Pesquisa:{
+        marginTop: 48,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginHorizontal: 8
+    },
+    barraPesquisa: {
+        width: '80%',
+        fontSize: 14,
+        color: '#FFF',
+        height: 49,
+        borderWidth: 1,
+        borderColor: '#2A2A2A',
+        borderTopLeftRadius: 16,
+        borderBottomLeftRadius: 16,
+        padding: 16,
+    },
+    buttonPesquisa: {
+        borderTopRightRadius: 16,
+        borderBottomRightRadius: 16,
+        backgroundColor: '#EB2F3D', // Pode ser ajustado conforme necessário
+        shadowColor: 'rgba(0, 0, 0, 0.12)',
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 4, // Adiciona a elevação para sombra no Android
+        alignSelf: 'center',
+        height: 49,
+        justifyContent: 'center',
+        width: '20%',
+    },
+    buttonText:{
+        color: '#fff',
+        alignSelf: 'center'
+    }
 });
 
 export default styles;
