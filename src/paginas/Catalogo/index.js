@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard  } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard, Alert  } from 'react-native';
 import { API_KEY, API_URL } from '@env';
 import PaginaBase from '../PaginaBase';
 import styles from './estilos';
@@ -15,7 +15,7 @@ const options = {
     }
 };
 
-export default function Catalogo() {
+export default function Catalogo({ route }) {
 
     const [filmes, setFilmes] = useState([]);
     const [pagina, setPagina] = useState(1);
@@ -27,6 +27,12 @@ export default function Catalogo() {
 
     // Estados para controlar o modal
     const [modalContent, setModalContent] = useState(null);
+
+    const { userData } = route.params; 
+    React.useEffect(() => {
+        Alert.alert('Dados do Usuário', JSON.stringify(userData)); // exibindo os dados em um Alert
+    }, [userData]);
+
 
     useEffect(() => {
         fetchCategorias();

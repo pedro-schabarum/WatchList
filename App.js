@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import { useFonts, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import Navigation from './src/routes/navigation';

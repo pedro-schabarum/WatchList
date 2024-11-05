@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
 
@@ -7,6 +7,7 @@ const windowWidth = Dimensions.get('window').width;
 // import PaginaBase from '../PaginaBase';
 
 export default function Home({navigation}) {
+
     return (
         <View style={styles.container}>
             <StatusBar/>

@@ -1,12 +1,47 @@
-import React from 'react';
-import {StyleSheet, Text, View, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, View, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native';
 import PaginaBase from '../PaginaBase';
+import { initializeDatabase, insertUser, getAllUsers } from '../../servicos/db/db';
 
 export default function Cadastro({navigation}) {
     const [nome, onChangeNome] = React.useState('');
     const [senha, onChangeSenha] = React.useState('');
     const [confirmaSenha, onChangeConfirmaSenha] = React.useState('');
     const [email, onChangeEmail] = React.useState('');
+    const [db, setDb] = React.useState(null);
+
+    useEffect(() => {
+        const setupDatabase = async () => {
+            const database = await initializeDatabase(); // Inicializa o banco de dados
+            setDb(database); // Armazena a instância do banco de dados
+        };
+        setupDatabase();
+    }, []);
+
+    const handleNavigate = async () => {
+        const userData = await getAllUsers(db); // função que busca os dados
+        navigation.navigate('Catalogo', { userData }); // passando os dados
+    };
+
+    const salvarUsuario = async () => {
+        if (senha !== confirmaSenha) {
+            Alert.alert("Erro", "As senhas não coincidem");
+            return;
+        }
+
+        try {
+            if (db) {
+                await insertUser(db, nome, email, senha); // Chama a função para inserir usuário
+                Alert.alert("Sucesso", "Usuário salvo com sucesso!");
+                handleNavigate(); // Navega para a tela Catalogo após salvar
+                
+            } else {
+                Alert.alert("Erro", "Banco de dados não inicializado");
+            }
+        } catch (error) {
+            Alert.alert("Erro", "Erro ao salvar usuário");
+        }
+    };
 
     return (
         <PaginaBase>
@@ -46,7 +81,7 @@ export default function Cadastro({navigation}) {
                         placeholderTextColor={'#575757'}
                     />
 
-                <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Catalogo')}}>
+                <TouchableOpacity style={styles.button} onPress={salvarUsuario}>
                     <Text style={styles.textoBotao}>Cadastrar</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
