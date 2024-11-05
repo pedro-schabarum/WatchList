@@ -1,16 +1,20 @@
 import * as SQLite from 'expo-sqlite';
-import * as Hash from '../senha/hash';
+// import * as Hash from '../senha/hash';
 
 const openDatabase = async () => {
-    const db = await SQLite.openDatabaseAsync('MyAppDatabase.db');
+    const db = await SQLite.openDatabaseAsync('WatchList.db');
     
     // Criação da tabela e inserção inicial de dados
+    // await db.execAsync(`
+    //     DROP DATABASE
+    //     );
+    // `);
     await db.execAsync(`
         PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS Users (
             id INTEGER PRIMARY KEY NOT NULL,
             nome TEXT NOT NULL,
-            email TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
             senha TEXT NOT NULL
         );
     `);
@@ -20,9 +24,9 @@ const openDatabase = async () => {
 
 // Função para inserir usuário
 export const insertUser = async (db, nome, email, senha) => {
-    const senhaHash = await Hash.hashPassword(senha);
-    console.log(senhaHash)
-    const result = await db.runAsync('INSERT INTO Users (nome, email, senha) VALUES (?, ?, ?)', nome, email, senhaHash);
+    // const senhaHash = await Hash.hashPassword(senha);
+    // console.log(senhaHash)
+    const result = await db.runAsync('INSERT INTO Users (nome, email, senha) VALUES (?, ?, ?)', nome, email, senha);
     return result; // Retorna o resultado da inserção
 };
 
@@ -33,12 +37,18 @@ export const getAllUsers = async (db) => {
 };
 
 // Função para obter um usuário específico
-export const getUser = async (db, id) => {
-    const user = await db.getFirstAsync('SELECT * FROM Users WHERE id = ?', id);
-    return user; // Retorna o usuário encontrado
+export const getUser = async (db, email, senha) => {
+    const user = await db.getAllAsync('SELECT email, senha FROM Users WHERE nome = ? AND senha = ?', email, senha);
+    return user ? true : false;
+
 };
 
 export const initializeDatabase = async () => {
     const db = await openDatabase();
     return db; // Retorna a instância do banco de dados
+};
+
+export const clearDatabase = async (db) => {
+    await db.execAsync('DROP TABLE IF EXISTS Users');
+    // Você pode adicionar mais comandos para outras tabelas, se necessário
 };

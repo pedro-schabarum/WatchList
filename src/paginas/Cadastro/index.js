@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, TextInput, KeyboardAvoidingView, TouchableOpacity, StatusBar, Platform, Alert } from 'react-native';
 import PaginaBase from '../PaginaBase';
 import { initializeDatabase, insertUser, getAllUsers } from '../../servicos/db/db';
+import { CommonActions } from '@react-navigation/native';
 
 export default function Cadastro({navigation}) {
     const [nome, onChangeNome] = React.useState('');
@@ -20,6 +21,12 @@ export default function Cadastro({navigation}) {
 
     const handleNavigate = async () => {
         const userData = await getAllUsers(db); // função que busca os dados
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home' }], // Mude 'Home' para o nome da sua tela inicial
+            })
+        );
         navigation.navigate('Catalogo', { userData }); // passando os dados
     };
 
@@ -33,6 +40,7 @@ export default function Cadastro({navigation}) {
             if (db) {
                 await insertUser(db, nome, email, senha); // Chama a função para inserir usuário
                 Alert.alert("Sucesso", "Usuário salvo com sucesso!");
+                
                 handleNavigate(); // Navega para a tela Catalogo após salvar
                 
             } else {
@@ -63,7 +71,9 @@ export default function Cadastro({navigation}) {
                         value={email}
                         placeholder="E-mail"
                         placeholderTextColor={'#575757'}
-                    />
+                        keyboardType="email-address" // Sugere o tipo de teclado adequado para emails
+                        autoCapitalize="none"
+                        />
 
                     <TextInput
                         style={styles.input}
