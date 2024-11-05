@@ -15,7 +15,7 @@ const options = {
     }
 };
 
-export default function Catalogo({ route }) {
+export default function Catalogo({ navigation }) {
 
     const [filmes, setFilmes] = useState([]);
     const [pagina, setPagina] = useState(1);
@@ -27,12 +27,6 @@ export default function Catalogo({ route }) {
 
     // Estados para controlar o modal
     const [modalContent, setModalContent] = useState(null);
-
-    const { userData } = route.params; 
-    React.useEffect(() => {
-        Alert.alert('Dados do Usuário', JSON.stringify(userData)); // exibindo os dados em um Alert
-    }, [userData]);
-
 
     useEffect(() => {
         fetchCategorias();
@@ -186,11 +180,12 @@ export default function Catalogo({ route }) {
 
     return (
         <PaginaBase>
-            <View style={styles.cabecalho}>
+            <View>
                 <Cabecalho
                     value={searchText}
                     onChangeText={setSearchText}
                     onSearch={handleSearch}
+                    navigation={navigation}
                 />
                 <Categorias 
                     categorias={categorias}

@@ -4,6 +4,7 @@ import Home from "../paginas/Home";
 import Login from "../paginas/Login";
 import Cadastro from "../paginas/Cadastro";
 import Catalogo from "../paginas/Catalogo";
+import Perfil from "../paginas/Perfil"
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function Navigation(){
                 <Stack.Screen name='Login' component={Login}/>
                 <Stack.Screen name='Cadastro' component={Cadastro}/>
                 <Stack.Screen name='Catalogo' component={Catalogo}/>
+                <Stack.Screen name='Perfil' component={Perfil}/>
             </Stack.Navigator>  
         </NavigationContainer>
     )
