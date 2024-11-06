@@ -19,18 +19,11 @@ export default function Catalogo({ navigation }) {
 
     const [filmes, setFilmes] = useState([]);
     const [pagina, setPagina] = useState(1);
-    const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
     const [idioma, setIdioma] = useState('pt-BR');
     const [searchText, setSearchText] = useState('');
     const [searchTriggered, setSearchTriggered] = useState(false);
 
-    // Estados para controlar o modal
-    // const [modalContent, setModalContent] = useState(null);
-
-    useEffect(() => {
-        fetchCategorias();
-    }, []); 
 
     useEffect(() => {
         fetchFilmes();
@@ -84,39 +77,22 @@ export default function Catalogo({ navigation }) {
         }
     };
 
-    const fetchCategorias = async () => {
-        try {
-            const response = await fetch(`${API_URL}/genre/movie/list?api_key=${API_KEY}&language=${idioma}`, options);
-            const data = await response.json();
-            setCategorias(data.genres);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const handleSelectCategoria = (categoria) => {
         if (categoriaSelecionada?.id === categoria.id){
             setCategoriaSelecionada(null);
         } else {
             setCategoriaSelecionada(categoria);
-            console.log(searchText)
             setSearchText('')
             setPagina(1);
             setFilmes([]);
         }
     };
 
- 
-
-    // Detalhe do filme
-
-
     const handleLoadMore = () => {
         setPagina((prevPagina) => prevPagina + 1);
     };
 
     const handleSearch = () => {
-        console.log(searchText)
         if (searchText.trim() == '') return;
         setPagina(1);
         setFilmes([]);
@@ -134,7 +110,8 @@ export default function Catalogo({ navigation }) {
                     navigation={navigation}
                 />
                 <Categorias 
-                    categorias={categorias}
+                    // categorias={categorias}
+                    idioma={idioma}
                     categoriaSelecionada={categoriaSelecionada}
                     handleSelectCategoria={handleSelectCategoria} 
                 />
@@ -143,9 +120,7 @@ export default function Catalogo({ navigation }) {
                 filmes={filmes}
                 idioma={idioma}
                 handleLoadMore={handleLoadMore}
-                // setModalContent={setModalContent}
             />
-            {/* {modalContent} */}
         </PaginaBase>
     );
 }
