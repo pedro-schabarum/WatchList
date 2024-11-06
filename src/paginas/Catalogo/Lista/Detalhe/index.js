@@ -2,6 +2,7 @@ import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextI
 import React, { useEffect, useState } from 'react';
 import { API_KEY, API_URL } from '@env';
 import styles from './estlios';
+import Elenco from './Elenco';
 
 const options = {
     method: 'GET',
@@ -11,17 +12,18 @@ const options = {
     }
 };
 
-const Detalhe = ({ itemSelecionado, idioma, onClose }) => {
-    const [detalheFilme, setDetalheFilme] = useState(null);
+const Detalhe = ({ itemSelecionado, idioma, onClose, isSeries }) => {
+    const [detalhes, setDetalhes] = useState(null);
     
     useEffect(()=>{
         
         // Busca detalhes do filme
         const fetchDetalhesFilme = async (filmeId) => {
             try {
-                const response = await fetch(`${API_URL}/movie/${filmeId}?api_key=${API_KEY}&language=${idioma}`, options);
+                let endpoint = isSeries ? 'tv' : 'movie';
+                const response = await fetch(`${API_URL}/${endpoint}/${filmeId}?api_key=${API_KEY}&language=${idioma}`, options);
                 const data = await response.json();
-                return setDetalheFilme(data);
+                return setDetalhes(data);
             } catch (error) {
                 console.error(error);
                 return null;
@@ -33,19 +35,21 @@ const Detalhe = ({ itemSelecionado, idioma, onClose }) => {
         }
     }, [itemSelecionado, idioma])
 
-    if (!itemSelecionado || !detalheFilme) {
+    if (!itemSelecionado || !detalhes) {
         return null;
     }
 
-    const dataFormatada = new Date(detalheFilme.release_date)
+    const dataFormatada = new Date(detalhes[isSeries? 'first_air_date' : 'runtime'])
         .toLocaleDateString(idioma, {
             day: "2-digit",
             month: "long", 
             year: "numeric"
         });
 
-    const duracaoFormatada = `${Math.floor(detalheFilme.runtime / 60)}h ${detalheFilme.runtime % 60}m`;
+        const duracaoFormatada = `${Math.floor(detalhes[isSeries ? 'first_air_date' : 'runtime'] / 60)}h ${detalhes[isSeries ? 'first_air_date' : 'runtime'] % 60}m`;
 
+
+    console.log("detalhe" + JSON.stringify(detalhes, null, 2))
 
     return(<View>
             <Modal
@@ -57,17 +61,21 @@ const Detalhe = ({ itemSelecionado, idioma, onClose }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Image
-                            source={{ uri: `https://image.tmdb.org/t/p/w500${detalheFilme.backdrop_path}` }}
+                            source={{ uri: `https://image.tmdb.org/t/p/w500${detalhes.backdrop_path}` }}
                             style={styles.imagemModal}
                         />
 
                         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-                            <Text style={styles.modalTitle}>{detalheFilme.title}</Text>
-                            {detalheFilme.tagline && (<Text style={styles.tagline}>{detalheFilme.tagline}</Text>)}
+                            <Text style={styles.modalTitle}>{isSeries? detalhes. name : detalhes.title}</Text>
+                            {detalhes.tagline && (<Text style={styles.tagline}>{detalhes.tagline}</Text>)}
                             <Text style={styles.modalData}>{dataFormatada}</Text>
-                            <Text style={styles.modalOverview}>{detalheFilme.overview}</Text>
+                            <Text style={styles.modalOverview}>{detalhes.overview}</Text>
                             <Text style={styles.modalDuracao}>Duração: {duracaoFormatada}</Text>
-                            <Text style={styles.modalCategorias}>Categorias: {detalheFilme.genres.map(genre => genre.name).join(", ")}</Text>
+                            <Text style={styles.modalCategorias}>Categorias: {detalhes.genres.map(genre => genre.name).join(", ")}</Text>
+                            <Elenco
+                                filmeId={itemSelecionado}
+                                idioma={idioma}
+                            />
                         </ScrollView>
 
                         <TouchableOpacity style={styles.modalButton} onPress={onClose}>
