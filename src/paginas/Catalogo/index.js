@@ -26,7 +26,7 @@ export default function Catalogo({ navigation }) {
     const [searchTriggered, setSearchTriggered] = useState(false);
 
     // Estados para controlar o modal
-    const [modalContent, setModalContent] = useState(null);
+    // const [modalContent, setModalContent] = useState(null);
 
     useEffect(() => {
         fetchCategorias();
@@ -106,63 +106,9 @@ export default function Catalogo({ navigation }) {
         }
     };
 
-    // Busca detalhes do filme
-    const fetchDetalhesFilme = async (filmeId, options) => {
-        try {
-            const response = await fetch(`${API_URL}/movie/${filmeId}?api_key=${API_KEY}&language=${idioma}`, options);
-            const data = await response.json();
-            return {
-                ...data,
-                runtime: data.runtime // Duração em minutos
-            };
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-    };   
+ 
 
     // Detalhe do filme
-    const openModal = async (filme) => {
-        const detalheFilme = await fetchDetalhesFilme(filme, options);
-        
-        const dataFormatada = new Date(detalheFilme.release_date)
-        .toLocaleDateString(idioma, {
-            day: "2-digit",
-            month: "long", 
-            year: "numeric"
-        });
-
-        setModalContent(
-            <Modal
-            visible={true}
-            animationType="slide"
-            transparent={true}
-            onRequestClose={() => setModalContent(null)}
-        >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    <Image
-                        source={{ uri: `https://image.tmdb.org/t/p/w500${detalheFilme.poster_path}` }}
-                        style={styles.imagemModal}
-                    />
-
-                    {/* ScrollView para textos */}
-                    <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-                        <Text style={styles.modalTitle}>{detalheFilme.title}</Text>
-                        {detalheFilme.tagline && (<Text style={styles.modalData}>{detalheFilme.tagline}</Text>)}
-                        <Text style={styles.modalData}>{dataFormatada}</Text>
-                        <Text style={styles.modalOverview}>{detalheFilme.overview}</Text>
-                        <Text style={styles.modalCategorias}>Categorias: {detalheFilme.genres.map(genre => genre.name).join(", ")}</Text>
-                    </ScrollView>
-
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalContent(null)}>
-                        <Text style={styles.textoBotao}>Fechar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </Modal>
-        );
-    };
 
 
     const handleLoadMore = () => {
@@ -195,10 +141,11 @@ export default function Catalogo({ navigation }) {
             </View>
             <Lista
                 filmes={filmes}
-                openModal={openModal}
+                idioma={idioma}
                 handleLoadMore={handleLoadMore}
+                // setModalContent={setModalContent}
             />
-            {modalContent}
+            {/* {modalContent} */}
         </PaginaBase>
     );
 }
