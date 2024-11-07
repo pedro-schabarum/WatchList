@@ -11,7 +11,7 @@ const Detalhe = ({ itemSelecionado, onClose }) => {
 
     const { idioma, isSeries, options } = useContext(GlobalContext);
     const [detalhes, setDetalhes] = useState(null);
-    
+
     useEffect(()=>{
         // Busca detalhes do filme
         const fetchDetalhesFilme = async (filmeId) => {
@@ -76,7 +76,7 @@ const Detalhe = ({ itemSelecionado, onClose }) => {
                             {duracaoFormatada.length>0? (<Text style={styles.modalDuracao}>
                                 Duração {isSeries?"por episódio": ""}: {duracaoFormatada}
                             </Text>) : ''}
-                            {detalhes.seasons && (<Temporadas temporadas={detalhes.seasons}/>)}
+                            {detalhes.seasons && (<Temporadas detalhes={detalhes}/>)}
                             <Text style={styles.modalCategorias}>
                                 Categorias: {detalhes.genres.map(genre => genre.name).join(", ")}
                             </Text>

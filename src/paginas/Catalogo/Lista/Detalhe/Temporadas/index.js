@@ -1,24 +1,40 @@
-import { Text, FlatList, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { Text, FlatList, TouchableOpacity, View } from 'react-native';
+import React, {useState} from 'react';
 import styles from './estilos';
+import DetalheTemporada from './DetalheTemporada'
+const Temporadas = ({ detalhes }) => {
 
-const Temporadas = ({ temporadas }) => {
+    const [temporadaSelecionada, setTemporadaSelecionada] = useState(null);
+    console.log(detalhes.id)
+    // console.log(JSON.stringify(temporadas, null, 2));
+    const handlePress = (item) => {
+        temporadaSelecionada ? temporadaSelecionada.id == item.id? setTemporadaSelecionada(null) :  setTemporadaSelecionada(item) : setTemporadaSelecionada(item)
+    };
+
     return (
-        <FlatList
-            data={temporadas}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-                item.air_date != null ? ( // Condição para exibir o item apenas se `air_date` for `null`
-                    <TouchableOpacity style={styles.touchableContainer}>
-                        <Text style={styles.temporadaNome}>{item.name}</Text>
-                        <Text style={styles.episodeCount}>{item.episode_count}</Text>
-                    </TouchableOpacity>
-                ) : null
-            )}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.temporadas}
-            nestedScrollEnabled={true}
-        />
+        <>
+            <FlatList
+                data={detalhes.seasons}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <View style={styles.temporadaContainer} >
+                        {item.air_date != null ? (
+                            <TouchableOpacity style={styles.touchableContainer} onPress={() => handlePress(item)}>
+                                <Text style={styles.temporadaNome}>{item.name}</Text>
+                                <Text style={styles.episodeCount}>{item.episode_count}</Text>
+                            </TouchableOpacity>
+                        ) : null}
+                        {temporadaSelecionada && temporadaSelecionada.id == item.id && (
+                            <DetalheTemporada id={detalhes.id} temporada={item} />
+                        )}
+                    </View>
+                )}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.temporadas}
+                nestedScrollEnabled={true}
+            />
+            
+        </>
     );
 };
 

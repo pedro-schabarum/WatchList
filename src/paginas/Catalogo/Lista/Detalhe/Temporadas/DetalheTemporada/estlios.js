@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
         padding: 12,              // Adiciona um espaçamento interno ao `TouchableOpacity`
         backgroundColor: '#41403E', // Fundo claro para contraste
         borderRadius: 8,          // Bordas arredondadas para cada item
+        marginBottom: 10,         // Espaçamento entre os itens da lista
         shadowColor: '#000',      // Sombra para destacar os itens
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
@@ -27,15 +28,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center' 
-    },
-    temporadaContainer: {
-        // padding: 12,              // Adiciona um espaçamento interno ao `TouchableOpacity`
-        backgroundColor: '#41403E', // Fundo claro para contraste
-        borderRadius: 8,          // Bordas arredondadas para cada item
-        marginBottom: 10,         // Espaçamento entre os itens da lista
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
     }
 });
 
