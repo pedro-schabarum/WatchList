@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     // Barra de pesquisas
     Pesquisa:{
-        marginTop: 48,
+        marginTop: 18,
         display: 'flex',
         flexDirection: 'row',
         // justifyContent: 'space-around',

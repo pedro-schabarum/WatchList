@@ -5,8 +5,7 @@ import DetalheTemporada from './DetalheTemporada'
 const Temporadas = ({ detalhes }) => {
 
     const [temporadaSelecionada, setTemporadaSelecionada] = useState(null);
-    console.log(detalhes.id)
-    // console.log(JSON.stringify(temporadas, null, 2));
+    
     const handlePress = (item) => {
         temporadaSelecionada ? temporadaSelecionada.id == item.id? setTemporadaSelecionada(null) :  setTemporadaSelecionada(item) : setTemporadaSelecionada(item)
     };

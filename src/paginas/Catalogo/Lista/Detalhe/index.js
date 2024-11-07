@@ -34,13 +34,13 @@ const Detalhe = ({ itemSelecionado, onClose }) => {
     if (!itemSelecionado || !detalhes) {
         return null;
     }
-
-    const dataFormatada = new Date(detalhes[isSeries? 'first_air_date' : 'runtime'])
+    
+    const dataFormatada = new Date(detalhes[isSeries? 'first_air_date' : 'release_date'])
         .toLocaleDateString(idioma, {
             day: "2-digit",
             month: "long", 
             year: "numeric"
-        });
+    });
 
     const duracaoMinutos = detalhes[isSeries ? 'episode_run_time' : 'runtime'];
     const horas = Math.floor(duracaoMinutos / 60);
