@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, TextInput, TouchableOpacity, StatusBar, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import PaginaBase from '../PaginaBase';
 import { getUser, initializeDatabase, getAllUsers } from '../../servicos/db/db';
@@ -6,15 +6,14 @@ import { CommonActions } from '@react-navigation/native';
 import styles from './estilos';
 
 export default function Home({navigation}) {
-    const [email, onChangeEmail] = React.useState('');
-    const [senha, onChangeSenha] = React.useState('');
-    const [db, setDb] = React.useState(null);
+    const [email, onChangeEmail] = useState('');
+    const [senha, onChangeSenha] = useState('');
+    const [db, setDb] = useState(null);
 
     useEffect(() => {
         const setupDatabase = async () => {
             const database = await initializeDatabase(); // Inicializa o banco de dados
             setDb(database); // Armazena a instância do banco de dados
-            console.log('Pegando banco')
         };
         setupDatabase();
     }, []);
@@ -24,7 +23,7 @@ export default function Home({navigation}) {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Home' }], // Mude 'Home' para o nome da sua tela inicial
+                routes: [{ name: 'Catalogo' }], // Mude 'Home' para o nome da sua tela inicial
             })
         );
         navigation.navigate('Catalogo', { userData }); // passando os dados

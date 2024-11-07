@@ -15,28 +15,37 @@ export const clearDatabaseFile = async () => {
 };
 
 const openDatabase = async () => {
+    console.log('abrindo base')
     const db = await SQLite.openDatabaseAsync('WatchList.db');
 
     // Definindo o modo de journal
     await db.execAsync(`PRAGMA journal_mode = WAL;`);
 
     // Criando a tabela Users, se não existir
-    await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS Users (
-            id INTEGER PRIMARY KEY NOT NULL,
-            nome TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            senha TEXT NOT NULL
-        );
-    `);
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS Users (
+        id INTEGER PRIMARY KEY NOT NULL,
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        senha TEXT NOT NULL,
+        idioma TEXT NOT NULL
+    );`);
+    // await db.execAsync(`CREATE TABLE IF NOT EXISTS User_Auth (
+    //     id INTEGER PRIMARY KEY NOT NULL,
+    //     user_id INTEGER NOT NULL, 
+    //     request_token TEXT,
+    //     access_token TEXT,
+    //     session_id TEXT,
+    //     expires_at TEXT,
+    //     FOREIGN KEY (user_id) REFERENCES Users(id)
+    // );`);
     
     return db;
 };
 
 // Função para inserir usuário
-export const insertUser = async (db, nome, email, senha) => {
+export const insertUser = async (db, nome, email, senha, idioma) => {
     try {
-        const result = await db.runAsync('INSERT INTO Users (nome, email, senha) VALUES (?, ?, ?)', nome, email, senha);
+        const result = await db.runAsync('INSERT INTO Users (nome, email, senha, idioma) VALUES (?, ?, ?, ?)', nome, email, senha, idioma);
         return result;  
     } catch (error) {
         if (error.message.includes('UNIQUE constraint failed: Users.email')) {
@@ -53,12 +62,13 @@ export const getAllUsers = async (db) => {
 
 // Função para obter um usuário específico
 export const getUser = async (db, email, senha) => {
-    const user = await db.getAllAsync('SELECT email, senha FROM Users WHERE email = ? AND senha = ?', email, senha);
+    const user = await db.getAllAsync('SELECT * FROM Users WHERE email = ? AND senha = ?', email, senha);
     return user.length > 0 ? user : false; 
 };
 
 // Inicializar o banco de dados
 export const initializeDatabase = async () => {
+    console.log('iniciando base')
     const db = await openDatabase();
     return db;
 };

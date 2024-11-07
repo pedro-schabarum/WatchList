@@ -1,27 +1,23 @@
 import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard  } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { API_KEY, API_URL } from '@env';
 import styles from './estlios';
 import Elenco from './Elenco';
+import Temporadas from './Temporadas';
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`
-    }
-};
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
-const Detalhe = ({ itemSelecionado, idioma, onClose, isSeries }) => {
+const Detalhe = ({ itemSelecionado, onClose }) => {
+
+    const { idioma, isSeries, options } = useContext(GlobalContext);
     const [detalhes, setDetalhes] = useState(null);
     
     useEffect(()=>{
-        
         // Busca detalhes do filme
         const fetchDetalhesFilme = async (filmeId) => {
             try {
                 let endpoint = isSeries ? 'tv' : 'movie';
-                const response = await fetch(`${API_URL}/${endpoint}/${filmeId}?api_key=${API_KEY}&language=${idioma}`, options);
+                const response = await fetch(`${API_URL}/${endpoint}/${filmeId}?&language=${idioma}`, options);
                 const data = await response.json();
                 return setDetalhes(data);
             } catch (error) {
@@ -46,10 +42,11 @@ const Detalhe = ({ itemSelecionado, idioma, onClose, isSeries }) => {
             year: "numeric"
         });
 
-        const duracaoFormatada = `${Math.floor(detalhes[isSeries ? 'first_air_date' : 'runtime'] / 60)}h ${detalhes[isSeries ? 'first_air_date' : 'runtime'] % 60}m`;
-
-
-    console.log("detalhe" + JSON.stringify(detalhes, null, 2))
+    const duracaoMinutos = detalhes[isSeries ? 'episode_run_time' : 'runtime'];
+    const horas = Math.floor(duracaoMinutos / 60);
+    const minutos = duracaoMinutos % 60;
+    
+    const duracaoFormatada = `${horas > 0 ? `${horas}h ` : ''}${minutos > 0 ? `${minutos}m ` : ''}`;
 
     return(<View>
             <Modal
@@ -66,15 +63,25 @@ const Detalhe = ({ itemSelecionado, idioma, onClose, isSeries }) => {
                         />
 
                         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-                            <Text style={styles.modalTitle}>{isSeries? detalhes. name : detalhes.title}</Text>
+                            <Text style={styles.modalTitle}>
+                                {isSeries? detalhes. name : detalhes.title}
+                            </Text>
                             {detalhes.tagline && (<Text style={styles.tagline}>{detalhes.tagline}</Text>)}
-                            <Text style={styles.modalData}>{dataFormatada}</Text>
-                            <Text style={styles.modalOverview}>{detalhes.overview}</Text>
-                            <Text style={styles.modalDuracao}>Duração: {duracaoFormatada}</Text>
-                            <Text style={styles.modalCategorias}>Categorias: {detalhes.genres.map(genre => genre.name).join(", ")}</Text>
+                            <Text style={styles.modalData}>
+                                {dataFormatada}
+                            </Text>
+                            <Text style={styles.modalOverview}>
+                                {detalhes.overview}
+                            </Text>
+                            {duracaoFormatada.length>0? (<Text style={styles.modalDuracao}>
+                                Duração {isSeries?"por episódio": ""}: {duracaoFormatada}
+                            </Text>) : ''}
+                            {detalhes.seasons && (<Temporadas temporadas={detalhes.seasons}/>)}
+                            <Text style={styles.modalCategorias}>
+                                Categorias: {detalhes.genres.map(genre => genre.name).join(", ")}
+                            </Text>
                             <Elenco
-                                filmeId={itemSelecionado}
-                                idioma={idioma}
+                                conteudoId={itemSelecionado} 
                             />
                         </ScrollView>
 

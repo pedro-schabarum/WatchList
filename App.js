@@ -2,6 +2,8 @@ import { useFonts, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fo
 import { Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import Navigation from './src/routes/navigation';
 
+import { GlobalProvider } from './src/contexts/GlobalContext';
+
 export default function App() {
   let [fontsLoaded, fontError] = useFonts({
     "PoppinsRegular": Poppins_400Regular,
@@ -14,6 +16,8 @@ export default function App() {
     return null;
   }
   return (
-    <Navigation/>
+    <GlobalProvider>
+      <Navigation/>
+    </GlobalProvider>
   );
 }

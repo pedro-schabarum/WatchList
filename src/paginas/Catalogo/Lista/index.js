@@ -1,12 +1,16 @@
 import { View, Text, Image, FlatList, TouchableOpacity} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styles from './estilos';
 import Detalhe from './Detalhe';
 
-const Lista = ({ conteudos, handleLoadMore, idioma, isSeries }) => {
+
+import { GlobalContext } from '../../../contexts/GlobalContext';
+
+const Lista = ({ conteudos, handleLoadMore }) => {
+    const { isSeries } = useContext(GlobalContext);
+
     const [itemSelecionado, setItemSelecionado] = useState(null);
 
-    console.log(JSON.stringify(conteudos[0], null, 2));
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.filmeContainer} onPress={() => setItemSelecionado(item.id)}>
             <Image
@@ -14,12 +18,13 @@ const Lista = ({ conteudos, handleLoadMore, idioma, isSeries }) => {
                 style={styles.imagem}
                 />
             <Text style={styles.titulo}>{ isSeries? item.name : item.title }</Text>
+            {/* <Text style={styles.diretor}>Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}</Text> */}
             <Text style={styles.diretor}>Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}</Text>
         </TouchableOpacity>
     );
 
     return(
-        <View>
+        <View style={{flex: 1}}>
             <FlatList
                 data={conteudos}
                 keyExtractor={(item) => item.id.toString()} 
@@ -30,8 +35,6 @@ const Lista = ({ conteudos, handleLoadMore, idioma, isSeries }) => {
             />
             <Detalhe
                 itemSelecionado={itemSelecionado}
-                idioma={idioma}
-                isSeries={isSeries}
                 onClose={() => setItemSelecionado(null)}
             />
         </View>

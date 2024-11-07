@@ -1,19 +1,20 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import { Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform, Alert } from 'react-native';
 import PaginaBase from '../PaginaBase';
 import { initializeDatabase, insertUser, getAllUsers, clearDatabaseFile } from '../../servicos/db/db';
 import { CommonActions } from '@react-navigation/native';
 import styles from './estilos';
-
+import { getRequestToken, redirectToAuthPage, getAccessTokenAndSessionId, isTokenExpired, authenticateUser} from '../../servicos/api/tmdb'
+import { GlobalContext } from '../../contexts/GlobalContext';
 
 export default function Cadastro({navigation}) {
-    const [nome, onChangeNome] = React.useState('');
-    const [senha, onChangeSenha] = React.useState('');
-    const [confirmaSenha, onChangeConfirmaSenha] = React.useState('');
-    const [email, onChangeEmail] = React.useState('');
-    const [db, setDb] = React.useState(null);
+    const [nome, onChangeNome] = useState('');
+    const [senha, onChangeSenha] = useState('');
+    const [confirmaSenha, onChangeConfirmaSenha] = useState('');
+    const [email, onChangeEmail] = useState('');
+    const [db, setDb] = useState(null);
 
-    
+    const { setUsuario, idioma } = useContext(GlobalContext);
 
     useEffect(() => {
         const setupDatabase = async () => {
@@ -26,10 +27,11 @@ export default function Cadastro({navigation}) {
 
     const handleNavigate = async () => {
         const userData = await getAllUsers(db); // função que busca os dados
+        
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Home' }], // Mude 'Home' para o nome da sua tela inicial
+                routes: [{ name: 'Catalogo' }], // Mude 'Home' para o nome da sua tela inicial
             })
         );
         navigation.navigate('Catalogo', { userData }); // passando os dados
@@ -48,9 +50,9 @@ export default function Cadastro({navigation}) {
 
         try {
             if (db) {
-                await insertUser(db, nome, email, senha); // Chama a função para inserir usuário
+                let user = await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
                 Alert.alert("Sucesso", "Usuário salvo com sucesso!");
-                
+                setUsuario(user)
                 handleNavigate(); // Navega para a tela Catalogo após salvar
                 
             } else {

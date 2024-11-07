@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import React, { useEffect, useState, useContext } from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';
-import styles from './estilos';
 import { API_KEY, API_URL } from '@env';
+import styles from './estilos';
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`
-    }
-};
 
-export default function Categorias({idioma, categoriaSelecionada, handleSelectCategoria }) {
+export default function Categorias({ categoriaSelecionada, handleSelectCategoria }) {
+
+    const { idioma, isSeries, options } = useContext(GlobalContext);
     const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
         fetchCategorias();
-    }, []); 
+    }, [isSeries]);
 
     const fetchCategorias = async () => {
         try {
-            const response = await fetch(`${API_URL}/genre/movie/list?api_key=${API_KEY}&language=${idioma}`, options);
+            let endpoint = isSeries ? 'tv' : 'movie';
+            const response = await fetch(`${API_URL}/genre/${endpoint}/list?language=${idioma}`, options);
             const data = await response.json();
             setCategorias(data.genres);
         } catch (error) {

@@ -1,27 +1,23 @@
-import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard  } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { API_KEY, API_URL } from '@env';
+import { Text, Image, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { API_URL } from '@env';
 import styles from './estilos';
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`
-    }
-};
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
-const Elenco = ({filmeId, idioma}) => {
+const Elenco = ({conteudoId}) => {
 
+    const { idioma, isSeries, options } = useContext(GlobalContext);
     const [elenco, setElenco] = useState()
 
     useEffect(() => {
-        fetchElenco(filmeId);
+        fetchElenco(conteudoId);
     }, []); 
 
-    const fetchElenco = async (filmeId) => {
+    const fetchElenco = async (conteudoId) => {
         try {
-            const response = await fetch(`${API_URL}/movie/${filmeId}/credits?language=${idioma}`, options);
+            let endpoint = isSeries ? 'tv' : 'movie';
+            const response = await fetch(`${API_URL}/${endpoint}/${conteudoId}/credits?language=${idioma}`, options);
             const data = await response.json();
             if(!data.cast) return null
             const elenco = data.cast.filter((membro) => membro.known_for_department === 'Acting');

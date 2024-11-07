@@ -9,7 +9,9 @@ const Cabecalho = ({ value, onChangeText, onSearch, navigation }) => (
             placeholder="Buscar filmes..."
             placeholderTextColor={'#575757'}
             value={value}                  
-            onChangeText={onChangeText} 
+            onChangeText={onChangeText}
+            returnKeyType="search"
+            onSubmitEditing={onSearch}
         />
         <TouchableOpacity style={styles.buttonPesquisa} onPress={onSearch}>
             <Text style={styles.buttonText}>Buscar</Text>
