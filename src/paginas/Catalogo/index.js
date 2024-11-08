@@ -13,7 +13,7 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 
 export default function Catalogo({ navigation }) {
 
-    const { idioma, isSeries, setIsSeries, options } = useContext(GlobalContext);
+    const { idioma, isSeries, setIsSeries, options, usuario } = useContext(GlobalContext);
 
     const [conteudos, setConteudos] = useState([]);
     const [pagina, setPagina] = useState(1);
@@ -21,6 +21,8 @@ export default function Catalogo({ navigation }) {
     const [searchText, setSearchText] = useState('');
     const [searchTriggered, setSearchTriggered] = useState(false);
 
+    
+    // console.log("user " + usuario);
     useEffect(() => {
         fetchConteudos();
     }, [pagina, categoriaSelecionada, searchTriggered, isSeries]); 

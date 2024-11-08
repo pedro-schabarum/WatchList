@@ -6,7 +6,7 @@ export const GlobalContext = createContext();
 export const GlobalProvider = ({ children }) => {
     const [idioma, setIdioma] = useState('pt-BR');
     const [isSeries, setIsSeries] = useState(false); 
-    const [usuario, setUsuario] = useState(null)
+    const [usuario, setUsuario] = useState(null);
     const options = {
         method: 'GET',
         headers: {
@@ -14,9 +14,10 @@ export const GlobalProvider = ({ children }) => {
             Authorization: `Bearer ${API_KEY}`
         }
     };
+    const [db, setDb] = useState(null);
 
   return (
-    <GlobalContext.Provider value={{ idioma, setIdioma, isSeries, setIsSeries, options, usuario, setUsuario}}>
+    <GlobalContext.Provider value={{ idioma, setIdioma, isSeries, setIsSeries, options, usuario, setUsuario, db, setDb}}>
       {children}
     </GlobalContext.Provider>
   );

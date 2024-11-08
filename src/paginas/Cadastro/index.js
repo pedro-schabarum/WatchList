@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useContext} from 'react';
 import { Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform, Alert } from 'react-native';
 import PaginaBase from '../PaginaBase';
-import { initializeDatabase, insertUser, getAllUsers, clearDatabaseFile } from '../../servicos/db/db';
+import { insertUser, getUserLogado } from '../../servicos/db/db';
 import { CommonActions } from '@react-navigation/native';
 import styles from './estilos';
-import { getRequestToken, redirectToAuthPage, getAccessTokenAndSessionId, isTokenExpired, authenticateUser} from '../../servicos/api/tmdb'
+// import { getRequestToken, redirectToAuthPage, getAccessTokenAndSessionId, isTokenExpired, authenticateUser} from '../../servicos/api/tmdb'
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 export default function Cadastro({navigation}) {
@@ -12,29 +12,17 @@ export default function Cadastro({navigation}) {
     const [senha, onChangeSenha] = useState('');
     const [confirmaSenha, onChangeConfirmaSenha] = useState('');
     const [email, onChangeEmail] = useState('');
-    const [db, setDb] = useState(null);
 
-    const { setUsuario, idioma } = useContext(GlobalContext);
-
-    useEffect(() => {
-        const setupDatabase = async () => {
-            const database = await initializeDatabase(); // Inicializa o banco de dados
-            setDb(database); // Armazena a instância do banco de dados
-        };
-        setupDatabase();
-        // clearDatabaseFile();
-    }, []);
+    const { setUsuario, idioma, db } = useContext(GlobalContext);
 
     const handleNavigate = async () => {
-        const userData = await getAllUsers(db); // função que busca os dados
-        
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
                 routes: [{ name: 'Catalogo' }], // Mude 'Home' para o nome da sua tela inicial
             })
         );
-        navigation.navigate('Catalogo', { userData }); // passando os dados
+        navigation.navigate('Catalogo'); // passando os dados
     };
 
     const salvarUsuario = async () => {
@@ -50,11 +38,11 @@ export default function Cadastro({navigation}) {
 
         try {
             if (db) {
-                let user = await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
+                await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
                 Alert.alert("Sucesso", "Usuário salvo com sucesso!");
-                setUsuario(user)
+                const resultado = await getUserLogado(database); // Usa `database` diretamente aqui
+                setUsuario(resultado);
                 handleNavigate(); // Navega para a tela Catalogo após salvar
-                
             } else {
                 Alert.alert("Erro", "Banco de dados não inicializado");
             }

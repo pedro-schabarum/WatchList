@@ -27,7 +27,10 @@ const openDatabase = async () => {
         nome TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL,
-        idioma TEXT NOT NULL
+        idioma TEXT NOT NULL,
+        -- dataNascimento DATE NOT NULL,
+        statusConta TEXT DEFAULT 'ativo',
+        statusLogin BOOLEAN DEFAULT FALSE
     );`);
     // await db.execAsync(`CREATE TABLE IF NOT EXISTS User_Auth (
     //     id INTEGER PRIMARY KEY NOT NULL,
@@ -45,7 +48,9 @@ const openDatabase = async () => {
 // Função para inserir usuário
 export const insertUser = async (db, nome, email, senha, idioma) => {
     try {
-        const result = await db.runAsync('INSERT INTO Users (nome, email, senha, idioma) VALUES (?, ?, ?, ?)', nome, email, senha, idioma);
+        // console.log("Tentando inserir usuário com dados:", nome, email, senha, idioma);
+        const result = await db.runAsync('INSERT INTO Users (nome, email, senha, idioma, statusLogin) VALUES (?, ?, ?, ?, TRUE)', nome, email, senha, idioma);
+        // console.log(result)
         return result;  
     } catch (error) {
         if (error.message.includes('UNIQUE constraint failed: Users.email')) {
@@ -65,6 +70,18 @@ export const getUser = async (db, email, senha) => {
     const user = await db.getAllAsync('SELECT * FROM Users WHERE email = ? AND senha = ?', email, senha);
     return user.length > 0 ? user : false; 
 };
+
+export const getUserLogado = async (db) => {
+    try {
+        const user = await db.getFirstAsync('SELECT * FROM Users WHERE statusLogin = TRUE');
+        // console.log('Usuário logado:', user);
+        return user || false; // Retorna o usuário encontrado ou `false` se não houver nenhum
+    } catch (error) {
+        console.error("Erro ao buscar usuário logado:", error);
+        return false;
+    }
+};
+
 
 // Inicializar o banco de dados
 export const initializeDatabase = async () => {

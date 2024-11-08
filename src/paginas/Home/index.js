@@ -2,16 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect } from 'react';
 import { Image, Text, View, TouchableOpacity } from 'react-native';
 import styles from './estilos';
+import { CommonActions } from '@react-navigation/native';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
-
+import { initializeDatabase, clearDatabaseFile, getUserLogado } from '../../servicos/db/db';
 
 export default function Home({navigation}) {
 
-    const { usuario } = useContext(GlobalContext);
+    const { usuario, setUsuario, setDb } = useContext(GlobalContext);
 
     const handleNavigate = async () => {
-        const userData = await getAllUsers(db); // função que busca os dados
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
@@ -21,11 +21,28 @@ export default function Home({navigation}) {
         navigation.navigate('Catalogo', { userData }); // passando os dados
     };
 
-    useEffect(()=>{
-        if(usuario){
-            handleNavigate()
+    useEffect(() => {
+        const setupDatabase = async () => {
+            const database = await initializeDatabase(); // Inicializa o banco de dados
+            setDb(database); // Armazena a instância do banco de dados
+    
+            const resultado = await getUserLogado(database); // Usa `database` diretamente aqui
+            setUsuario(resultado);
+        };
+    
+        setupDatabase();
+        // clearDatabaseFile(); // Remova ou adicione aqui se realmente for necessário
+    }, []);
+    
+    // Este useEffect será chamado quando o estado `usuario` for atualizado
+    useEffect(() => {
+        if (usuario) {  // Verifica se `usuario` não é null ou undefined
+            if (usuario.statusLogin === 1 || usuario.statusLogin === true) {
+                handleNavigate(); // Navega se o usuário logado for encontrado
+            }
         }
-    })
+    }, [usuario]); // Dependência no estado `usuario`
+    
 
     return (
         <View style={styles.container}>
