@@ -25,7 +25,7 @@ export default function Catalogo({ navigation }) {
     // console.log("user " + usuario);
     useEffect(() => {
         fetchConteudos();
-    }, [pagina, categoriaSelecionada, searchTriggered, isSeries]); 
+    }, [pagina, categoriaSelecionada, searchTriggered, isSeries, idioma]); 
 
     // Buscas na API
     const fetchConteudos = async () => {

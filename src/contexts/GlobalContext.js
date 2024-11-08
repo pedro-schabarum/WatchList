@@ -4,7 +4,7 @@ import { API_KEY } from '@env';
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-    const [idioma, setIdioma] = useState('pt-BR');
+    const [idioma, setIdioma] = useState();
     const [isSeries, setIsSeries] = useState(false); 
     const [usuario, setUsuario] = useState(null);
     const options = {

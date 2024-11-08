@@ -5,11 +5,11 @@ import styles from './estilos';
 import { CommonActions } from '@react-navigation/native';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
-import { initializeDatabase, clearDatabaseFile, getUserLogado } from '../../servicos/db/db';
+import { initializeDatabase, clearDatabaseFile, getUserLogado,  } from '../../servicos/db/db';
 
 export default function Home({navigation}) {
 
-    const { usuario, setUsuario, setDb } = useContext(GlobalContext);
+    const { usuario, setUsuario, setDb, setIdioma } = useContext(GlobalContext);
 
     const handleNavigate = async () => {
         navigation.dispatch(
@@ -18,7 +18,7 @@ export default function Home({navigation}) {
                 routes: [{ name: 'Catalogo' }], // Mude 'Home' para o nome da sua tela inicial
             })
         );
-        navigation.navigate('Catalogo', { userData }); // passando os dados
+        navigation.navigate('Catalogo'); // passando os dados
     };
 
     useEffect(() => {
@@ -27,6 +27,7 @@ export default function Home({navigation}) {
             setDb(database); // Armazena a instância do banco de dados
     
             const resultado = await getUserLogado(database); // Usa `database` diretamente aqui
+            console.log(resultado)
             setUsuario(resultado);
         };
     
@@ -38,6 +39,7 @@ export default function Home({navigation}) {
     useEffect(() => {
         if (usuario) {  // Verifica se `usuario` não é null ou undefined
             if (usuario.statusLogin === 1 || usuario.statusLogin === true) {
+                setIdioma(usuario.idioma)
                 handleNavigate(); // Navega se o usuário logado for encontrado
             }
         }

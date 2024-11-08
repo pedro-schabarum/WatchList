@@ -6,7 +6,7 @@ const Cabecalho = ({ value, onChangeText, onSearch, navigation }) => (
     <View style={styles.Pesquisa}>
         <TextInput
             style={styles.barraPesquisa}
-            placeholder="Buscar filmes..."
+            placeholder="Buscar..."
             placeholderTextColor={'#575757'}
             value={value}                  
             onChangeText={onChangeText}

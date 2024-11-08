@@ -106,4 +106,18 @@ export const clearDatabase = async (db) => {
     `);
 };
 
+// Função para atualizar o idioma do usuário no banco local
+export const updateUserIdioma = async (db, usuario) => {
+    try {
+        // console.log("Tentando inserir usuário com dados:", nome, email, senha, idioma);
+        const result = await db.runAsync('UPDATE users SET idioma = ? WHERE email = ?', usuario.idioma, usuario.email);
+        // console.log(result)
+        return ;  
+    } catch (error) {
+        if (error.message.includes('UNIQUE constraint failed: Users.email')) {
+            throw new Error('E-mail já cadastrado.');
+        }
+    }
+  };
+
 // Chame clearDatabase(db) para limpar o banco e recriá-lo vazio.

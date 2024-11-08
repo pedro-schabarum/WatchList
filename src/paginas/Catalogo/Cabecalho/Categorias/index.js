@@ -12,7 +12,7 @@ export default function Categorias({ categoriaSelecionada, handleSelectCategoria
 
     useEffect(() => {
         fetchCategorias();
-    }, [isSeries]);
+    }, [isSeries, idioma]);
 
     const fetchCategorias = async () => {
         try {
