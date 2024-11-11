@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Image, TouchableOpacity, Keyboard, Alert  } from 'react-native';
-import { API_KEY, API_URL } from '@env';
 import PaginaBase from '../PaginaBase';
 import Cabecalho from './Cabecalho/Pesquisa';
 import Categorias from './Cabecalho/Categorias';
@@ -8,12 +7,13 @@ import Lista from './Lista';
 import styles from './estilos';
 import filmeImage from '../../assets/movies.png';
 import serieImage from '../../assets/series.png';
+import { fetchConteudos } from '../../servicos/api/tmdb'
 
 import { GlobalContext } from '../../contexts/GlobalContext';
 
 export default function Catalogo({ navigation }) {
 
-    const { idioma, isSeries, setIsSeries, options, usuario } = useContext(GlobalContext);
+    const { idioma, isSeries, setIsSeries, options } = useContext(GlobalContext);
 
     const [conteudos, setConteudos] = useState([]);
     const [pagina, setPagina] = useState(1);
@@ -21,43 +21,26 @@ export default function Catalogo({ navigation }) {
     const [searchText, setSearchText] = useState('');
     const [searchTriggered, setSearchTriggered] = useState(false);
 
-    
-    // console.log("user " + usuario);
     useEffect(() => {
-        fetchConteudos();
+        fetchData();
     }, [pagina, categoriaSelecionada, searchTriggered, isSeries, idioma]); 
 
     // Buscas na API
-    const fetchConteudos = async () => {
-
+    const fetchData = async () => {
         try {
-            let endpoint = isSeries ? 'tv' : 'movie';
-            let url = categoriaSelecionada
-                ? `${API_URL}/discover/${endpoint}?with_genres=${categoriaSelecionada.id}&page=${pagina}&language=${idioma}`
-                : `${API_URL}/${endpoint}/popular?page=${pagina}&language=${idioma}`;
-            
-            if (searchText) {
-                Keyboard.dismiss();
-                // URL de pesquisa com o termo digitado
-                url = `${API_URL}/search/${endpoint}?query=${searchText}&page=${pagina}&language=${idioma}`;
-            }
-
-            const response = await fetch(url, options);
-            const data = await response.json();
-
+            const endpoint = isSeries ? 'tv' : 'movie';
+            const data = await fetchConteudos({ endpoint, pagina, idioma, categoriaSelecionada, searchText, options });
             if (data.results.length === 0) {
-                // Alert.alert("Não há mais conteúdos para mostrar!");
-                return; // Não faça nada se não houver mais dados
+                return; // Não há mais dados
             }
-
             setConteudos((prevConteudos) => {
-                const novosConteudos = data.results.filter(filme => 
+                const novosConteudos = data.results.filter(filme =>
                     !prevConteudos.some(prevFilme => prevFilme.id === filme.id)
                 );
                 return pagina === 1 ? novosConteudos : [...prevConteudos, ...novosConteudos];
             });
         } catch (error) {
-            console.error(error);
+            console.error('Erro ao buscar conteúdos:', error);
         }
     };
 

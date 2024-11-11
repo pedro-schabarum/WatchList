@@ -1,8 +1,7 @@
 import { Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
-import { API_URL } from '@env';
 import styles from './estilos';
-
+import { fetchElenco } from  '../../../../../servicos/api/tmdb'
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 const Elenco = ({conteudoId}) => {
@@ -11,21 +10,16 @@ const Elenco = ({conteudoId}) => {
     const [elenco, setElenco] = useState()
 
     useEffect(() => {
-        fetchElenco(conteudoId);
+        fetchData();
     }, []); 
 
-    const fetchElenco = async (conteudoId) => {
+    const fetchData = async () => {
         try {
             let endpoint = isSeries ? 'tv' : 'movie';
-            const response = await fetch(`${API_URL}/${endpoint}/${conteudoId}/credits?language=${idioma}`, options);
-            const data = await response.json();
-            if(!data.cast) return null
-            const elenco = data.cast.filter((membro) => membro.known_for_department === 'Acting');
-            
-            setElenco(elenco || []);
+            const data = await fetchElenco({endpoint, conteudoId, idioma, options});
+            setElenco(data);
         } catch (error) {
-            console.error(error);
-            return null;
+            console.error('Erro ao buscar conteúdos:', error);
         }
     };
 

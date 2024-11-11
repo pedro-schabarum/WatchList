@@ -1,36 +1,28 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { API_KEY, API_URL } from '@env';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 import styles from './estlios';
+import { fetchDetalhesTemporadas } from '../../../../../../servicos/api/tmdb';
 
 const DetalheTemporada = ({ id, temporada }) => {
 
-    const { idioma, isSeries, options } = useContext(GlobalContext);
+    const { idioma, options } = useContext(GlobalContext);
     const [detalhesTemporada, setDetalhesTemporada] = useState([])
 
     useEffect(() => {
-        const fetchDetalhesTemporadas = async () => {
-            try {
-                // Verifica se 'id' e 'temporada.id' estão disponíveis antes de fazer a requisição
-                if (id && temporada?.id) {
-                    const response = await fetch(
-                        `${API_URL}/tv/${id}/season/${temporada.season_number}?language=${idioma}`,
-                        options
-                    );
-                    const data = await response.json();
-                    setDetalhesTemporada(data.episodes); // Atualiza o estado com os detalhes
-                }
-            } catch (error) {
-                console.error('Erro ao buscar os detalhes da temporada:', error);
-            }
-        };
-
-        // Chama a função de fetch apenas quando o id e temporada.id estiverem disponíveis
-        if (id && temporada?.id) {
-            fetchDetalhesTemporadas();
-        }
+        fetchData()
     }, [id, temporada, idioma]); // Dependências para garantir que o efeito seja reexecutado quando algum valor mudar
+
+    const fetchData = async () => {
+        try {
+            if (id && temporada?.id) {
+                const data = await fetchDetalhesTemporadas({ id, temporada, idioma, options });
+                setDetalhesTemporada(data.episodes);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar conteúdos:', error);
+        }
+    };
 
     return (
         <View style={styles.container}>

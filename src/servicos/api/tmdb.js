@@ -1,6 +1,8 @@
 import { API_KEY, API_URL } from '@env';
 import { Linking } from 'react-native';
 
+// Autenticacao usuario
+
 let requestToken = ''; // Armazena o request_token
 let sessionId = '';    // Armazena o session_id
 
@@ -14,7 +16,7 @@ const options = {
 };
 
 // 1. Obter o request_token
-const getRequestToken = async () => {
+export const getRequestToken = async () => {
     const url = `${API_URL}/authentication/token/new`;
     try {
         const response = await fetch(url, options);
@@ -28,7 +30,7 @@ const getRequestToken = async () => {
 };
 
 // 2. Redirecionar o usuário para a autorização
-const redirectToAuthPage = () => {
+export const redirectToAuthPage = () => {
     const authUrl = `https://www.themoviedb.org/authenticate/${requestToken}`;
     Linking.openURL(authUrl).catch((err) => {
         console.error("Erro ao tentar abrir a URL:", err);
@@ -81,7 +83,7 @@ const getSessionId = async () => {
 };
 
 // 5. Fluxo completo de autenticação
-const authenticateUser = async () => {
+export const authenticateUser = async () => {
     try {
         // Obter o request_token
         await getRequestToken();
@@ -99,9 +101,78 @@ const authenticateUser = async () => {
     }
 };
 
-// Exportar funções caso necessário
-export {
-    getRequestToken,
-    redirectToAuthPage,
-    authenticateUser
+// Catálogo
+
+export const fetchConteudos = async ({ endpoint, pagina, idioma, categoriaSelecionada, searchText, options }) => {
+    try {
+        let url = categoriaSelecionada
+            ? `${API_URL}/discover/${endpoint}?with_genres=${categoriaSelecionada.id}&page=${pagina}&language=${idioma}`
+            : `${API_URL}/${endpoint}/popular?page=${pagina}&language=${idioma}`;
+
+        if (searchText) {
+            url = `${API_URL}/search/${endpoint}?query=${searchText}&page=${pagina}&language=${idioma}`;
+        }
+
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw error; // Rejeitar a promessa com o erro para tratamento posterior
+    }
 };
+
+// Elenco
+
+export const fetchElenco = async ({endpoint, conteudoId, idioma, options}) => {
+    try {
+        const response = await fetch(`${API_URL}/${endpoint}/${conteudoId}/credits?language=${idioma}`, options);
+        const data = await response.json();
+        if(!data.cast) return null
+        const elenco = data.cast.filter((membro) => membro.known_for_department === 'Acting');
+        return (elenco || []);
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+
+// Lista de eps
+
+export const fetchDetalhesTemporadas = async ({id, temporada, idioma, options}) => {
+    try {
+        // Verifica se 'id' e 'temporada.id' estão disponíveis antes de fazer a requisição
+        if (id && temporada?.id) {
+            const response = await fetch(
+                `${API_URL}/tv/${id}/season/${temporada.season_number}?language=${idioma}`,
+                options
+            );
+            return await response.json();
+        }
+    } catch (error) {
+        console.error('Erro ao buscar os detalhes da temporada:', error);
+    }
+};
+
+// Pegando categorias
+export const fetchCategorias = async ({endpoint, idioma, options}) => {
+    try {
+        const response = await fetch(`${API_URL}/genre/${endpoint}/list?language=${idioma}`, options);
+        const data = await response.json();
+        return(data.genres);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// Pegando detalhes
+export const fetchDetalhesConteudo = async ({endpoint, filmeId, idioma, options}) => {
+    try {
+        const response = await fetch(`${API_URL}/${endpoint}/${filmeId}?&language=${idioma}`, options);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};  

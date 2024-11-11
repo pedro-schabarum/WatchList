@@ -1,9 +1,8 @@
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import React, { useEffect, useState, useContext } from 'react';
 import { FlatList, Text, TouchableOpacity } from 'react-native';
-import { API_KEY, API_URL } from '@env';
 import styles from './estilos';
-
+import {fetchCategorias} from '../../../../servicos/api/tmdb'
 
 export default function Categorias({ categoriaSelecionada, handleSelectCategoria }) {
 
@@ -11,19 +10,19 @@ export default function Categorias({ categoriaSelecionada, handleSelectCategoria
     const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
-        fetchCategorias();
+        getCategorias();
     }, [isSeries, idioma]);
 
-    const fetchCategorias = async () => {
+    const getCategorias = async () => {
         try {
             let endpoint = isSeries ? 'tv' : 'movie';
-            const response = await fetch(`${API_URL}/genre/${endpoint}/list?language=${idioma}`, options);
-            const data = await response.json();
-            setCategorias(data.genres);
+            const response = await fetchCategorias({endpoint, idioma, options});
+            setCategorias(response);
         } catch (error) {
             console.error(error);
         }
     };
+    
     return(    
         <FlatList
             data={categorias}

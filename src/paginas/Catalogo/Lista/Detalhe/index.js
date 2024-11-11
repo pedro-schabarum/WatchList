@@ -1,9 +1,9 @@
 import { View, Text, Image, FlatList, TouchableOpacity, Modal, ScrollView, TextInput, Keyboard  } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
-import { API_KEY, API_URL } from '@env';
 import styles from './estlios';
 import Elenco from './Elenco';
 import Temporadas from './Temporadas';
+import {fetchDetalhesConteudo} from '../../../../servicos/api/tmdb'
 
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
@@ -14,26 +14,25 @@ const Detalhe = ({ itemSelecionado, onClose }) => {
 
     useEffect(()=>{
         // Busca detalhes do filme
-        const fetchDetalhesFilme = async (filmeId) => {
-            try {
-                let endpoint = isSeries ? 'tv' : 'movie';
-                const response = await fetch(`${API_URL}/${endpoint}/${filmeId}?&language=${idioma}`, options);
-                const data = await response.json();
-                return setDetalhes(data);
-            } catch (error) {
-                console.error(error);
-                return null;
-            }
-        };  
-
         if (itemSelecionado) {
-            fetchDetalhesFilme(itemSelecionado);
+            getDetalhe(itemSelecionado);
         }
-    }, [itemSelecionado, idioma])
+    }, [itemSelecionado, idioma]);
+
+    const getDetalhe = async (filmeId) => {
+        try {
+            let endpoint = isSeries ? 'tv' : 'movie';
+            const response = await fetchDetalhesConteudo({endpoint, filmeId, idioma, options})
+            setDetalhes(response);
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    };  
 
     if (!itemSelecionado || !detalhes) {
         return null;
-    }
+    };
     
     const dataFormatada = new Date(detalhes[isSeries? 'first_air_date' : 'release_date'])
         .toLocaleDateString(idioma, {
