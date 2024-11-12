@@ -16,7 +16,7 @@ const Cabecalho = ({ value, onChangeText, onSearch, navigation }) => (
         <TouchableOpacity style={styles.buttonPesquisa} onPress={onSearch}>
             <Text style={styles.buttonText}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonPerfil} onPress={()=> navigation.navigate('Perfil')}>
+        <TouchableOpacity style={styles.buttonPerfil} onPress={()=> navigation.navigate('Perfil', { tipoUsuario: 1})}>
             <Image source={require('../../../../assets/user.png')}/>
         </TouchableOpacity>
     </View>
