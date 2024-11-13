@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "WatchList",
     "slug": "WatchList",
     "scheme": "meuapp",
@@ -27,9 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font"
-    ],
+    "plugins": ["expo-font"],
     "extra": {
       "eas": {
         "projectId": "e27beba5-b325-44a3-8942-7b6a727de2cc"

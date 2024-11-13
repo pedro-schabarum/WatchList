@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { GlobalContext } from "../../../../../../contexts/GlobalContext";
 import styles from "./estlios";
@@ -28,6 +28,28 @@ const DetalheTemporada = ({ id, temporada }) => {
     }
   };
 
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity style={styles.episodeContainer}>
+        <Text style={styles.episodeTitle}>{item.name}</Text>
+        <Text
+          style={styles.episodeNumber}
+        >{`Episódio ${item.episode_number}`}</Text>
+        <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
+          item.air_date
+        ).toLocaleDateString(idioma, {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })}`}</Text>
+        {item.overview && (
+          <Text style={styles.episodeOverview}>{item.overview}</Text>
+        )}
+      </TouchableOpacity>
+    ),
+    []
+  );
+
   return (
     <View style={styles.container}>
       {detalhesTemporada ? (
@@ -35,24 +57,7 @@ const DetalheTemporada = ({ id, temporada }) => {
           <FlatList
             data={detalhesTemporada}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.episodeContainer}>
-                <Text style={styles.episodeTitle}>{item.name}</Text>
-                <Text
-                  style={styles.episodeNumber}
-                >{`Episódio ${item.episode_number}`}</Text>
-                <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
-                  item.air_date
-                ).toLocaleDateString(idioma, {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}`}</Text>
-                {item.overview && (
-                  <Text style={styles.episodeOverview}>{item.overview}</Text>
-                )}
-              </TouchableOpacity>
-            )}
+            renderItem={renderItem}
             initialNumToRender={10}
           />
         </>

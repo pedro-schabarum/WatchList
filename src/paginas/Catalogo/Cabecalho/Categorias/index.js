@@ -1,5 +1,5 @@
 import { GlobalContext } from "../../../../contexts/GlobalContext";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 import styles from "./estilos";
 import { fetchCategorias } from "../../../../servicos/api/tmdb";
@@ -17,7 +17,7 @@ export default function Categorias({
 
   const getCategorias = async () => {
     try {
-      let endpoint = isSeries ? "tv" : "movie";
+      const endpoint = isSeries ? "tv" : "movie";
       const response = await fetchCategorias({ endpoint, idioma, options });
       setCategorias(response);
     } catch (error) {
@@ -25,26 +25,32 @@ export default function Categorias({
     }
   };
 
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={[
+          styles.navItem,
+          categoriaSelecionada?.id === item.id && styles.navItemSelected,
+        ]}
+        onPress={() => handleSelectCategoria(item)}
+      >
+        <Text style={styles.navText}>{item.name}</Text>
+      </TouchableOpacity>
+    ),
+    [categoriaSelecionada, handleSelectCategoria]
+  );
+
   return (
     <FlatList
       data={categorias}
       horizontal
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={[
-            styles.navItem,
-            categoriaSelecionada?.id === item.id && styles.navItemSelected,
-          ]}
-          onPress={() => handleSelectCategoria(item)}
-        >
-          <Text style={styles.navText}>{item.name}</Text>
-        </TouchableOpacity>
-      )}
+      renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.navBar}
-      extraData={categoriaSelecionada}
+      extraData={categoriaSelecionada?.id} // Mantém referência apenas ao necessário
       initialNumToRender={10}
+      maxToRenderPerBatch={5} // Limite de itens renderizados por lote
     />
   );
 }

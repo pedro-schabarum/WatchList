@@ -1,5 +1,5 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import styles from "./estilos";
 import Detalhe from "./Detalhe";
 
@@ -10,21 +10,24 @@ const Lista = ({ conteudos, handleLoadMore }) => {
 
   const [itemSelecionado, setItemSelecionado] = useState(null);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.filmeContainer}
-      onPress={() => setItemSelecionado(item.id)}
-    >
-      <Image
-        source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
-        style={styles.imagem}
-      />
-      <Text style={styles.titulo}>{isSeries ? item.name : item.title}</Text>
-      {/* <Text style={styles.diretor}>Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}</Text> */}
-      <Text style={styles.diretor}>
-        Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}
-      </Text>
-    </TouchableOpacity>
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={styles.filmeContainer}
+        onPress={() => setItemSelecionado(item.id)}
+      >
+        <Image
+          source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+          style={styles.imagem}
+        />
+        <Text style={styles.titulo}>{isSeries ? item.name : item.title}</Text>
+        {/* <Text style={styles.diretor}>Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}</Text> */}
+        <Text style={styles.diretor}>
+          Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}
+        </Text>
+      </TouchableOpacity>
+    ),
+    [isSeries]
   );
 
   return (
@@ -37,6 +40,8 @@ const Lista = ({ conteudos, handleLoadMore }) => {
         initialNumToRender={20}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.4}
+        maxToRenderPerBatch={10} // Ajuste conforme necessário
+        windowSize={5}
       />
       <Detalhe
         itemSelecionado={itemSelecionado}

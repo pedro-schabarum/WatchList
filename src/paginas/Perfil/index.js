@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -112,7 +112,7 @@ const ProfileScreen = ({ navigation, route }) => {
       month: "long",
       year: "numeric",
     });
-    const FilmeItem = React.memo(({ item }) => (
+    const filmeItem = useCallback(({ item }) => (
       <TouchableOpacity
         onPress={() => {
           setItemSelecionado(item.id);
@@ -129,7 +129,7 @@ const ProfileScreen = ({ navigation, route }) => {
       </TouchableOpacity>
     ));
 
-    const SerieItem = React.memo(({ item }) => (
+    const serieItem = useCallback(({ item }) => (
       <TouchableOpacity
         onPress={() => {
           setItemSelecionado(item.id);
@@ -171,7 +171,7 @@ const ProfileScreen = ({ navigation, route }) => {
                     data={pessoa.filmes}
                     horizontal
                     keyExtractor={(item) => `filme-${item.id}`}
-                    renderItem={({ item }) => <FilmeItem item={item} />}
+                    renderItem={filmeItem}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.filmes}
                     initialNumToRender={10}
@@ -185,7 +185,7 @@ const ProfileScreen = ({ navigation, route }) => {
                     data={pessoa.series}
                     horizontal
                     keyExtractor={(item) => `serie-${item.id}`}
-                    renderItem={({ item }) => <SerieItem item={item} />}
+                    renderItem={serieItem}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.filmes}
                     initialNumToRender={10}

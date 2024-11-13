@@ -1,5 +1,5 @@
 import { Text, Image, FlatList, TouchableOpacity } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "./estilos";
 import { fetchElenco } from "../../../../../servicos/api/tmdb";
 import { GlobalContext } from "../../../../../contexts/GlobalContext";
@@ -27,35 +27,40 @@ const Elenco = ({ conteudoId, onClose, origem, isFilme }) => {
     }
   };
 
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Perfil", {
+            tipoUsuario: 2,
+            integranteId: item.id,
+          });
+          onClose(); // Chama a função 'fechar' após a navegação
+        }}
+      >
+        <Image
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
+          }}
+          style={styles.elencoImagem}
+        />
+        <Text style={styles.elencoNome}>{item.name}</Text>
+        {item.character.split(" / ").map((role, index) => (
+          <Text key={index} style={styles.elencoPersonagem}>
+            {role}
+          </Text>
+        ))}
+      </TouchableOpacity>
+    ),
+    [elenco]
+  );
+
   return elenco ? (
     <FlatList
       data={elenco}
       horizontal
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Perfil", {
-              tipoUsuario: 2,
-              integranteId: item.id,
-            });
-            onClose(); // Chama a função 'fechar' após a navegação
-          }}
-        >
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w500${item.profile_path}`,
-            }}
-            style={styles.elencoImagem}
-          />
-          <Text style={styles.elencoNome}>{item.name}</Text>
-          {item.character.split(" / ").map((role, index) => (
-            <Text key={index} style={styles.elencoPersonagem}>
-              {role}
-            </Text>
-          ))}
-        </TouchableOpacity>
-      )}
+      renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.elenco}
       initialNumToRender={10}
