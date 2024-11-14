@@ -36,8 +36,9 @@ const ProfileScreen = ({ navigation, route }) => {
   ];
 
   useEffect(() => {
+    setPessoa([]);
     tipoUsuario == 2 ? fetchData() : null;
-  }, []);
+  }, [integranteId]);
 
   const fetchData = async () => {
     try {
@@ -106,7 +107,6 @@ const ProfileScreen = ({ navigation, route }) => {
     );
   } else if (tipoUsuario == 2) {
     // setPessoa([]);
-
     const dataFormatada = new Date(pessoa.birthday).toLocaleDateString(idioma, {
       day: "2-digit",
       month: "long",
@@ -151,15 +151,21 @@ const ProfileScreen = ({ navigation, route }) => {
         {pessoa ? (
           <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.pessoa}>
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w500${pessoa.profile_path}`,
-                }}
-                style={styles.profileImage}
-              />
+              {pessoa.profile_path && (
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w500${pessoa.profile_path}`,
+                  }}
+                  style={styles.profileImage}
+                />
+              )}
               <Text style={styles.name}>{pessoa.name}</Text>
-              <Text style={styles.dataNasc}>{dataFormatada}</Text>
-              <Text style={styles.localNasc}>{pessoa.place_of_birth}</Text>
+              {pessoa.birthday && (
+                <Text style={styles.dataNasc}>{dataFormatada}</Text>
+              )}
+              {pessoa.place_of_birth && (
+                <Text style={styles.localNasc}>{pessoa.place_of_birth}</Text>
+              )}
               {pessoa.biography && (
                 <Text style={styles.bio}>{pessoa.biography}</Text>
               )}
