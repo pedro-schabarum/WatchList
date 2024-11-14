@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // padding: 20,
-    paddingTop: 28,
+    // paddingTop: 28,
     // justifyContent: "center",
   },
   text: {
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   pessoa: {
     padding: 20,
     alignItems: "center",
+    paddingTop: 48,
   },
   profileImage: {
     width: 300,

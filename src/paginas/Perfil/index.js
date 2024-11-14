@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import {
-  View,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -69,37 +68,35 @@ const ProfileScreen = ({ navigation, route }) => {
     return (
       <PaginaBase>
         {usuario ? (
-          <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.pessoa}>
-              <Text style={styles.text}>Olá, {usuario.nome}</Text>
-              <Text style={styles.text}>Email: {usuario.email}</Text>
-              <Text style={styles.text}>Idioma: {usuario.idioma}</Text>
+          <ScrollView contentContainerStyle={styles.pessoa}>
+            <Text style={styles.text}>Olá, {usuario.nome}</Text>
+            <Text style={styles.text}>Email: {usuario.email}</Text>
+            <Text style={styles.text}>Idioma: {usuario.idioma}</Text>
 
-              <Text style={styles.label}>Escolha seu idioma:</Text>
+            <Text style={styles.label}>Escolha seu idioma:</Text>
 
-              <Picker
-                style={styles.picker}
-                selectedValue={selectedLanguage}
-                onValueChange={(itemValue) => handleSaveLanguage(itemValue)}
-                itemStyle={styles.pickerItem}
-              >
-                {languageOptions.map((lang) => (
-                  <Picker.Item
-                    key={lang.code}
-                    label={lang.name}
-                    value={lang.code}
-                  />
-                ))}
-              </Picker>
+            <Picker
+              style={styles.picker}
+              selectedValue={selectedLanguage}
+              onValueChange={(itemValue) => handleSaveLanguage(itemValue)}
+              itemStyle={styles.pickerItem}
+            >
+              {languageOptions.map((lang) => (
+                <Picker.Item
+                  key={lang.code}
+                  label={lang.name}
+                  value={lang.code}
+                />
+              ))}
+            </Picker>
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("Catalogo")}
-              >
-                <Text style={styles.buttonText}>Voltar</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Catalogo")}
+            >
+              <Text style={styles.buttonText}>Voltar</Text>
+            </TouchableOpacity>
+          </ScrollView>
         ) : (
           <Text>Carregando perfil...</Text>
         )}
@@ -149,65 +146,65 @@ const ProfileScreen = ({ navigation, route }) => {
     return (
       <PaginaBase>
         {pessoa ? (
-          <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.pessoa}>
-              {pessoa.profile_path && (
-                <Image
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w500${pessoa.profile_path}`,
-                  }}
-                  style={styles.profileImage}
-                />
-              )}
-              <Text style={styles.name}>{pessoa.name}</Text>
-              {pessoa.birthday && (
-                <Text style={styles.dataNasc}>{dataFormatada}</Text>
-              )}
-              {pessoa.place_of_birth && (
-                <Text style={styles.localNasc}>{pessoa.place_of_birth}</Text>
-              )}
-              {pessoa.biography && (
-                <Text style={styles.bio}>{pessoa.biography}</Text>
-              )}
-
-              {pessoa.filmes && pessoa.filmes.length > 0 && (
-                <>
-                  <Text style={styles.tituloScroll}>Filmes</Text>
-                  <FlatList
-                    data={pessoa.filmes}
-                    horizontal
-                    keyExtractor={(item) => `filme-${item.id}`}
-                    renderItem={filmeItem}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.filmes}
-                    initialNumToRender={10}
-                  />
-                </>
-              )}
-              {pessoa.series && pessoa.series.length > 0 && (
-                <>
-                  <Text style={styles.tituloScroll}>Series</Text>
-                  <FlatList
-                    data={pessoa.series}
-                    horizontal
-                    keyExtractor={(item) => `serie-${item.id}`}
-                    renderItem={serieItem}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.filmes}
-                    initialNumToRender={10}
-                  />
-                </>
-              )}
-
-              <Detalhe
-                itemSelecionado={itemSelecionado}
-                onClose={() => setItemSelecionado(null)}
-                isFilme={isFilme}
-                origem={"elenco"}
+          // <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.pessoa}>
+            {pessoa.profile_path && (
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w500${pessoa.profile_path}`,
+                }}
+                style={styles.profileImage}
               />
-            </ScrollView>
-          </View>
+            )}
+            <Text style={styles.name}>{pessoa.name}</Text>
+            {pessoa.birthday && (
+              <Text style={styles.dataNasc}>{dataFormatada}</Text>
+            )}
+            {pessoa.place_of_birth && (
+              <Text style={styles.localNasc}>{pessoa.place_of_birth}</Text>
+            )}
+            {pessoa.biography && (
+              <Text style={styles.bio}>{pessoa.biography}</Text>
+            )}
+
+            {pessoa.filmes && pessoa.filmes.length > 0 && (
+              <>
+                <Text style={styles.tituloScroll}>Filmes</Text>
+                <FlatList
+                  data={pessoa.filmes}
+                  horizontal
+                  keyExtractor={(item) => `filme-${item.id}`}
+                  renderItem={filmeItem}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.filmes}
+                  initialNumToRender={10}
+                />
+              </>
+            )}
+            {pessoa.series && pessoa.series.length > 0 && (
+              <>
+                <Text style={styles.tituloScroll}>Series</Text>
+                <FlatList
+                  data={pessoa.series}
+                  horizontal
+                  keyExtractor={(item) => `serie-${item.id}`}
+                  renderItem={serieItem}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.filmes}
+                  initialNumToRender={10}
+                />
+              </>
+            )}
+
+            <Detalhe
+              itemSelecionado={itemSelecionado}
+              onClose={() => setItemSelecionado(null)}
+              isFilme={isFilme}
+              origem={"elenco"}
+            />
+          </ScrollView>
         ) : (
+          /* </View> */
           <Text>Carregando perfil...</Text>
         )}
       </PaginaBase>

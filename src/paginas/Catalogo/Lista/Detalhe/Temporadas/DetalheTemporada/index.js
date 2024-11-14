@@ -3,10 +3,12 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { GlobalContext } from "../../../../../../contexts/GlobalContext";
 import styles from "./estlios";
 import { fetchDetalhesTemporadas } from "../../../../../../servicos/api/tmdb";
+import AdicionarLista from "../../AdicionarLista";
 
 const DetalheTemporada = ({ id, temporada }) => {
   const { idioma, options } = useContext(GlobalContext);
   const [detalhesTemporada, setDetalhesTemporada] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -30,12 +32,17 @@ const DetalheTemporada = ({ id, temporada }) => {
 
   const renderItem = useCallback(
     ({ item }) => (
-      <TouchableOpacity style={styles.episodeContainer}>
-        <Text style={styles.episodeTitle}>{item.name}</Text>
+      <TouchableOpacity
+        style={styles.episodeContainer}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Text style={styles.assistido.episodeTitle}>{item.name}</Text>
         <Text
-          style={styles.episodeNumber}
+          style={styles.assistido.episodeNumber}
         >{`Episódio ${item.episode_number}`}</Text>
-        <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
+        <Text style={styles.assistido.episodeDate}>{`Lançamento: ${new Date(
           item.air_date
         ).toLocaleDateString(idioma, {
           day: "2-digit",
@@ -43,7 +50,7 @@ const DetalheTemporada = ({ id, temporada }) => {
           year: "numeric",
         })}`}</Text>
         {item.overview && (
-          <Text style={styles.episodeOverview}>{item.overview}</Text>
+          <Text style={styles.assistido.episodeOverview}>{item.overview}</Text>
         )}
       </TouchableOpacity>
     ),
@@ -60,6 +67,12 @@ const DetalheTemporada = ({ id, temporada }) => {
             renderItem={renderItem}
             initialNumToRender={10}
           />
+          {modalVisible && (
+            <AdicionarLista
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+            />
+          )}
         </>
       ) : (
         <Text>Carregando detalhes da temporada...</Text>

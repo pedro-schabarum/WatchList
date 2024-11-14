@@ -10,13 +10,15 @@ import React, { useEffect, useState, useContext } from "react";
 import styles from "./estlios";
 import Elenco from "./Elenco";
 import Temporadas from "./Temporadas";
+import add from "../../../../assets/plus.png";
 import { fetchDetalhesConteudo } from "../../../../servicos/api/tmdb";
-
 import { GlobalContext } from "../../../../contexts/GlobalContext";
+import AdicionarLista from "./AdicionarLista";
 
 const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
   const { idioma, isSeries, options } = useContext(GlobalContext);
   const [detalhes, setDetalhes] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     // Busca detalhes do filme
@@ -42,6 +44,10 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
       console.error(error);
       return null;
     }
+  };
+
+  const handleAddMovie = (movieName) => {
+    setMovies([...movies, { id: Date.now().toString(), name: movieName }]);
   };
 
   if (!itemSelecionado || !detalhes) {
@@ -80,7 +86,6 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
               }}
               style={styles.imagemModal}
             />
-
             <ScrollView
               style={styles.scrollView}
               contentContainerStyle={styles.scrollViewContent}
@@ -112,7 +117,23 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
                 isFilme={isFilme}
               />
             </ScrollView>
+            {!isSeries && (
+              <TouchableOpacity
+                style={styles.adicionar}
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
+                <Image style={styles.imageToggle} source={add} />
+              </TouchableOpacity>
+            )}
 
+            {modalVisible && (
+              <AdicionarLista
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+              />
+            )}
             <TouchableOpacity style={styles.modalButton} onPress={onClose}>
               <Text style={styles.textoBotao}>Fechar</Text>
             </TouchableOpacity>
