@@ -62,6 +62,8 @@ const ProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  console.log(usuario);
+
   // console.log(pessoa);
 
   if (tipoUsuario == 1) {

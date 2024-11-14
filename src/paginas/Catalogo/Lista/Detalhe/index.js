@@ -70,6 +70,8 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
     minutos > 0 ? `${minutos}m ` : ""
   }`;
 
+  console.log(detalhes);
+
   return (
     <View>
       <Modal
