@@ -18,51 +18,39 @@ const styles = StyleSheet.create({
       fontFamily: "InterMedium",
     },
     episodeNumber: {
-      color: "#939392",
+      color: "#C0C0C0",
       fontSize: 14,
     },
     episodeDate: {
-      color: "#939392",
+      color: "#C0C0C0",
       fontSize: 14,
     },
     episodeOverview: {
       marginVertical: 10,
       // fontStyle: 'italic',
-      color: "#FFF",
+      color: "#C0C0C0",
       textAlign: "justify",
     },
   },
   assistido: {
     episodeTitle: {
-      color: "#FFF",
+      color: "#939392",
       fontSize: 18,
       fontFamily: "InterMedium",
-      textShadowColor: "#4CAF50", // Cor da sombra
-      textShadowOffset: { width: 3, height: 3 }, // Deslocamento da sombra
-      textShadowRadius: 3,
     },
     episodeNumber: {
       color: "#939392",
       fontSize: 14,
-      textShadowColor: "#4CAF50", // Cor da sombra
-      textShadowOffset: { width: 3, height: 3 }, // Deslocamento da sombra
-      textShadowRadius: 3,
     },
     episodeDate: {
       color: "#939392",
       fontSize: 14,
-      textShadowColor: "#4CAF50", // Cor da sombra
-      textShadowOffset: { width: 3, height: 3 }, // Deslocamento da sombra
-      textShadowRadius: 3,
     },
     episodeOverview: {
       marginVertical: 10,
       // fontStyle: 'italic',
-      color: "#FFF",
+      color: "#939392",
       textAlign: "justify",
-      textShadowColor: "#4CAF50", // Cor da sombra
-      textShadowOffset: { width: 3, height: 3 }, // Deslocamento da sombra
-      textShadowRadius: 3,
     },
   },
 });

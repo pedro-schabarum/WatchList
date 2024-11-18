@@ -70,8 +70,6 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
     minutos > 0 ? `${minutos}m ` : ""
   }`;
 
-  console.log(detalhes);
-
   return (
     <View>
       <Modal
@@ -92,14 +90,21 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
               style={styles.scrollView}
               contentContainerStyle={styles.scrollViewContent}
             >
-              <Text style={styles.modalTitle}>
-                {isSeries ? detalhes.name : detalhes.title}
-              </Text>
+              {(detalhes.name || detalhes.title) && (
+                <Text style={styles.modalTitle}>
+                  {isSeries ? detalhes.name : detalhes.title}
+                </Text>
+              )}
+
               {detalhes.tagline && (
                 <Text style={styles.tagline}>{detalhes.tagline}</Text>
               )}
-              <Text style={styles.modalData}>{dataFormatada}</Text>
-              <Text style={styles.modalOverview}>{detalhes.overview}</Text>
+              {(detalhes.episode_run_time || detalhes.runtime) && (
+                <Text style={styles.modalData}>{dataFormatada}</Text>
+              )}
+              {detalhes.overview && (
+                <Text style={styles.modalOverview}>{detalhes.overview}</Text>
+              )}
               {duracaoFormatada.length > 0 ? (
                 <Text style={styles.modalDuracao}>
                   Duração {isSeries ? "por episódio" : ""}: {duracaoFormatada}

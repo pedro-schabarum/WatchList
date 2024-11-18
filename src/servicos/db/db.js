@@ -32,6 +32,7 @@ const openDatabase = async () => {
         statusConta TEXT DEFAULT 'ativo',
         statusLogin BOOLEAN DEFAULT FALSE
     );`);
+
   // await db.execAsync(`CREATE TABLE IF NOT EXISTS User_Auth (
   //     id INTEGER PRIMARY KEY NOT NULL,
   //     user_id INTEGER NOT NULL,

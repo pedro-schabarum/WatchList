@@ -9,6 +9,7 @@ const DetalheTemporada = ({ id, temporada }) => {
   const { idioma, options } = useContext(GlobalContext);
   const [detalhesTemporada, setDetalhesTemporada] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [episodioSelecionado, setEpisodioSelecionado] = useState();
 
   useEffect(() => {
     fetchData();
@@ -35,6 +36,7 @@ const DetalheTemporada = ({ id, temporada }) => {
       <TouchableOpacity
         style={styles.episodeContainer}
         onPress={() => {
+          setEpisodioSelecionado(item);
           setModalVisible(true);
         }}
       >
@@ -49,9 +51,6 @@ const DetalheTemporada = ({ id, temporada }) => {
           month: "long",
           year: "numeric",
         })}`}</Text>
-        {item.overview && (
-          <Text style={styles.assistido.episodeOverview}>{item.overview}</Text>
-        )}
       </TouchableOpacity>
     ),
     []
@@ -71,6 +70,7 @@ const DetalheTemporada = ({ id, temporada }) => {
             <AdicionarLista
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
+              item={episodioSelecionado}
             />
           )}
         </>

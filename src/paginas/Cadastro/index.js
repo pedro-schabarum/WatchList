@@ -50,10 +50,8 @@ export default function Cadastro({ navigation }) {
     try {
       if (db) {
         const insercao = await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
-        console.log("insercao: " + insercao);
         Alert.alert("Sucesso", "Usuário salvo com sucesso!");
         const resultado = await getUserLogado(db); // Usa `database` diretamente aqui
-        console.log("resultado: " + resultado);
         setUsuario(resultado);
         handleNavigate(); // Navega para a tela Catalogo após salvar
       } else {
