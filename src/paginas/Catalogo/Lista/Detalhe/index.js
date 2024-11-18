@@ -139,6 +139,8 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
               <AdicionarLista
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
+                item={detalhes}
+                // origem={"filme"}
               />
             )}
             <TouchableOpacity style={styles.modalButton} onPress={onClose}>

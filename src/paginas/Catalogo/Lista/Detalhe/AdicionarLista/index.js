@@ -3,7 +3,6 @@ import {
   Modal,
   View,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -32,33 +31,38 @@ const AdicionarLista = ({ visible, onClose, item }) => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <>
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/w500${item.still_path}`,
-              }}
-              style={styles.episodeImage}
-            />
-            <Text style={styles.episodeTitle}>{item.name}</Text>
-            <Text
-              style={styles.episodeNumber}
-            >{`Episódio ${item.episode_number}`}</Text>
-            <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
-              item.air_date
-            ).toLocaleDateString(idioma, {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}`}</Text>
-            {item.overview && (
-              <Text style={styles.episodeOverview}>{item.overview}</Text>
+            {isSeries && (
+              <>
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w500${item.still_path}`,
+                  }}
+                  style={styles.episodeImage}
+                />
+                <Text style={styles.episodeTitle}>{item.name}</Text>
+                <Text
+                  style={styles.episodeNumber}
+                >{`Episódio ${item.episode_number}`}</Text>
+                <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
+                  item.air_date
+                ).toLocaleDateString(idioma, {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}`}</Text>
+                {item.overview && (
+                  <Text style={styles.episodeOverview}>{item.overview}</Text>
+                )}
+                {duracaoFormatada.length > 0 ? (
+                  <Text style={styles.modalDuracao}>
+                    Duração: {duracaoFormatada}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </>
             )}
-            {duracaoFormatada.length > 0 ? (
-              <Text style={styles.modalDuracao}>
-                Duração: {duracaoFormatada}
-              </Text>
-            ) : (
-              <></>
-            )}
+
             {!isSeries && (
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Interesses</Text>
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
     elevation: 4, // Adiciona a elevação para sombra no Android
     padding: 10, // Pode ser ajustado conforme necessário
     width: 200,
-    // alignSelf: "center",
+    alignSelf: "center",
     height: 53,
     justifyContent: "center",
   },

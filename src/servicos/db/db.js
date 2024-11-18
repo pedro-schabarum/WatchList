@@ -84,7 +84,7 @@ export const getUser = async (db, email, senha) => {
 export const getUserLogado = async (db) => {
   try {
     const user = await db.getFirstAsync(
-      "SELECT * FROM Users WHERE statusLogin = TRUE"
+      "SELECT * FROM Users WHERE statusLogin = 1"
     );
     // console.log('Usuário logado:', user);
     return user || false; // Retorna o usuário encontrado ou `false` se não houver nenhum

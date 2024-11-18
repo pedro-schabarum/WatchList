@@ -71,6 +71,7 @@ const DetalheTemporada = ({ id, temporada }) => {
               visible={modalVisible}
               onClose={() => setModalVisible(false)}
               item={episodioSelecionado}
+              // origem={"serie"}
             />
           )}
         </>
