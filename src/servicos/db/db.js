@@ -28,21 +28,15 @@ const openDatabase = async () => {
         email TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL,
         idioma TEXT NOT NULL,
-        -- dataNascimento DATE NOT NULL,
+        dataNascimento DATE,
         statusConta TEXT DEFAULT 'ativo',
         statusLogin BOOLEAN DEFAULT FALSE
-    );`);
+    );
+    
+    CREATE TABLE IF NOT EXIST
 
-  // await db.execAsync(`CREATE TABLE IF NOT EXISTS User_Auth (
-  //     id INTEGER PRIMARY KEY NOT NULL,
-  //     user_id INTEGER NOT NULL,
-  //     request_token TEXT,
-  //     access_token TEXT,
-  //     session_id TEXT,
-  //     expires_at TEXT,
-  //     FOREIGN KEY (user_id) REFERENCES Users(id)
-  // );`);
-
+    
+    `);
   return db;
 };
 
