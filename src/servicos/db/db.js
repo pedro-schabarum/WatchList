@@ -22,21 +22,43 @@ const openDatabase = async () => {
   await db.execAsync(`PRAGMA journal_mode = WAL;`);
 
   // Criando a tabela Users, se não existir
-  await db.execAsync(`CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY KEY NOT NULL,
-        nome TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        senha TEXT NOT NULL,
-        idioma TEXT NOT NULL,
-        dataNascimento DATE,
-        statusConta TEXT DEFAULT 'ativo',
-        statusLogin BOOLEAN DEFAULT FALSE
-    );
-    
-    CREATE TABLE IF NOT EXIST
+  await db.execAsync(`CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    senha TEXT NOT NULL,
+    idioma TEXT NOT NULL,
+    dataNascimento DATE,
+    statusConta TEXT DEFAULT 'ativo',
+    statusLogin BOOLEAN DEFAULT FALSE
+  )`);
 
-    
-    `);
+  await db.execAsync(`CREATE TABLE IF NOT EXISTS Lista (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    idUsuario INTEGER,
+    idConteudo INTEGER,
+    titulo VARCHAR,
+    tipoConteudo VARCHAR,
+    datacriacao DATETIME,
+    FOREIGN KEY (idUsuario) REFERENCES usuarios(id)
+  )`);
+
+  await db.execAsync(`CREATE TABLE IF NOT EXISTS filmesAssistidos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    listaId INTEGER,
+    dataInclusao DATETIME NOT NULL,
+    FOREIGN KEY (listaId) REFERENCES Lista(id)
+  )`);
+
+  await db.execAsync(`CREATE TABLE IF NOT EXISTS seriesAssistidas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    listaId INTEGER,
+    serieID INTEGER NOT NULL,
+    episodeID INTEGER NOT NULL,
+    assistido BOOLEAN NOT NULL,
+    FOREIGN KEY (listaId) REFERENCES Lista(id)
+  )`);
+
   return db;
 };
 
@@ -45,7 +67,7 @@ export const insertUser = async (db, nome, email, senha, idioma) => {
   try {
     // console.log("Tentando inserir usuário com dados:", nome, email, senha, idioma);
     const result = await db.runAsync(
-      "INSERT INTO Users (nome, email, senha, idioma, statusLogin) VALUES (?, ?, ?, ?, TRUE)",
+      "INSERT INTO usuarios ( nome, email, senha, idioma, statusLogin) VALUES (?, ?, ?, ?, TRUE)",
       nome,
       email,
       senha,
@@ -53,7 +75,7 @@ export const insertUser = async (db, nome, email, senha, idioma) => {
     );
     return result;
   } catch (error) {
-    if (error.message.includes("UNIQUE constraint failed: Users.email")) {
+    if (error.message.includes("UNIQUE constraint failed: usuarios.email")) {
       throw new Error("E-mail já cadastrado.");
     }
   }
@@ -61,14 +83,14 @@ export const insertUser = async (db, nome, email, senha, idioma) => {
 
 // Função para obter todos os usuários
 export const getAllUsers = async (db) => {
-  const allRows = await db.getAllAsync("SELECT * FROM Users");
+  const allRows = await db.getAllAsync("SELECT * FROM usuarios");
   return allRows;
 };
 
 // Função para obter um usuário específico
 export const getUser = async (db, email, senha) => {
   const user = await db.getAllAsync(
-    "SELECT * FROM Users WHERE email = ? AND senha = ?",
+    "SELECT * FROM usuarios WHERE email = ? AND senha = ?",
     email,
     senha
   );
@@ -78,7 +100,7 @@ export const getUser = async (db, email, senha) => {
 export const getUserLogado = async (db) => {
   try {
     const user = await db.getFirstAsync(
-      "SELECT * FROM Users WHERE statusLogin = 1"
+      "SELECT * FROM usuarios WHERE statusLogin = 1"
     );
     // console.log('Usuário logado:', user);
     return user || false; // Retorna o usuário encontrado ou `false` se não houver nenhum
@@ -101,17 +123,17 @@ export const clearDatabase = async (db) => {
   await db.execAsync("DROP TABLE IF EXISTS Users");
 
   // Opcional: recria a tabela
-  await db.execAsync(`CREATE TABLE IF NOT EXISTS Users (
-        id INTEGER PRIMARY AUTOINCREMENT KEY NOT NULL,
-        nome TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        senha TEXT NOT NULL,
-        idioma TEXT NOT NULL,
-        -- dataNascimento DATE NOT NULL,
-        statusConta TEXT DEFAULT 'ativo',
-        statusLogin BOOLEAN DEFAULT FALSE
-    );
-    `);
+  // await db.execAsync(`CREATE TABLE IF NOT EXISTS Users (
+  //       id INTEGER PRIMARY AUTOINCREMENT KEY NOT NULL,
+  //       nome TEXT NOT NULL,
+  //       email TEXT NOT NULL UNIQUE,
+  //       senha TEXT NOT NULL,
+  //       idioma TEXT NOT NULL,
+  //       -- dataNascimento DATE NOT NULL,
+  //       statusConta TEXT DEFAULT 'ativo',
+  //       statusLogin BOOLEAN DEFAULT FALSE
+  //   );
+  //   `);
 };
 
 // Função para atualizar o idioma do usuário no banco local
@@ -119,7 +141,7 @@ export const updateUserIdioma = async (db, usuario) => {
   try {
     // console.log("Tentando inserir usuário com dados:", nome, email, senha, idioma);
     const result = await db.runAsync(
-      "UPDATE users SET idioma = ? WHERE email = ?",
+      "UPDATE usuarios SET idioma = ? WHERE email = ?",
       usuario.idioma,
       usuario.email
     );

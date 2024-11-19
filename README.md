@@ -40,7 +40,6 @@ erDiagram
     filmesAssistidos {
         INTEGER id PK
         INTEGER listaId FK
-        VARCHAR tipoConteudo
         DATETIME dataInclusao
     }
 
@@ -58,6 +57,7 @@ erDiagram
         INTEGER idUsuario FK
         INTEGER idConteudo FK
         VARCHAR titulo
+        VARCHAR tipoConteudo
         DATETIME dataCriacao
     }
 
