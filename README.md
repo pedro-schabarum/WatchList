@@ -26,7 +26,6 @@ Para verificar se o Expo foi instalado corretamente, execute: `expo --version`.
 
 ```mermaid
 graph TD
-    graph TD
     @startuml
 
 !define primary_key(x) <b><u>x</u></b>
