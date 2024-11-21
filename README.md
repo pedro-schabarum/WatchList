@@ -32,8 +32,8 @@ erDiagram
         VARCHAR idioma
         VARCHAR fotoPerfil
         DATETIME datanasc
-        BOOLEAN statusConta DEFAULT TRUE
-        BOOLEAN statusLogin DEFAULT TRUE
+        BOOLEAN statusConta "DEFAULT TRUE"
+        BOOLEAN statusLogin "DEFAULT TRUE"
         DATETIME dataCriacao
     }
 
