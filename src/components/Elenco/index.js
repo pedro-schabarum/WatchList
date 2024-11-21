@@ -1,8 +1,8 @@
 import { Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "./estilos";
-import { fetchElenco } from "../../../../../servicos/api/tmdb";
-import { GlobalContext } from "../../../../../contexts/GlobalContext";
+import { fetchElenco } from "../../servicos/api/tmdb";
+import { GlobalContext } from "../../contexts/GlobalContext";
 import { useNavigation } from "@react-navigation/native";
 
 const Elenco = ({ conteudoId, onClose, origem, isFilme }) => {

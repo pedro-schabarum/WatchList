@@ -1,8 +1,8 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useCallback } from "react";
 import styles from "./estilos";
-import Detalhe from "./Detalhe";
-import { GlobalContext } from "../../../contexts/GlobalContext";
+import Detalhe from "../Detalhe";
+import { GlobalContext } from "../../contexts/GlobalContext";
 
 const Lista = ({ conteudos, handleLoadMore }) => {
   const { isSeries } = useContext(GlobalContext);

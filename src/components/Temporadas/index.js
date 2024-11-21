@@ -1,7 +1,7 @@
 import { Text, FlatList, TouchableOpacity, View } from "react-native";
 import React, { useState, useCallback } from "react";
 import styles from "./estilos";
-import DetalheTemporada from "./DetalheTemporada";
+import DetalheTemporada from "../DetalheTemporada";
 const Temporadas = ({ detalhes }) => {
   const [temporadaSelecionada, setTemporadaSelecionada] = useState(null);
 

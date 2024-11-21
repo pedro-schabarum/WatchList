@@ -1,9 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useContext, useEffect } from "react";
-import { Image, Text, View, TouchableOpacity } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Image, Text, View, TouchableOpacity, Button } from "react-native";
 import styles from "./estilos";
 import { CommonActions } from "@react-navigation/native";
 import { GlobalContext } from "../../contexts/GlobalContext";
+import { useI18n } from "../../hooks/useI18n";
+// import * as ReactNativeLocalize from "react-native-localize";
+import i18n from "../../hooks/I18n";
 
 import {
   initializeDatabase,
@@ -12,7 +15,10 @@ import {
 } from "../../servicos/db/db";
 
 export default function Home({ navigation }) {
-  const { usuario, setUsuario, setDb, setIdioma } = useContext(GlobalContext);
+  const { usuario, setUsuario, setDb, setIdioma, idioma } =
+    useContext(GlobalContext);
+
+  useI18n(idioma);
 
   const handleNavigate = async () => {
     navigation.dispatch(
@@ -61,13 +67,13 @@ export default function Home({ navigation }) {
           style={styles.button}
           onPress={() => navigation.navigate("Login")}
         >
-          <Text style={styles.textoBotao}>Logar</Text>
+          <Text style={styles.textoBotao}>{i18n.t("logar")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Cadastro")}
         >
-          <Text style={styles.textoBotao}>Cadastrar</Text>
+          <Text style={styles.textoBotao}>{i18n.t("cadastrar")}</Text>
         </TouchableOpacity>
       </View>
     </View>

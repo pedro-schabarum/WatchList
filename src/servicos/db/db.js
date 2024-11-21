@@ -28,6 +28,7 @@ const openDatabase = async () => {
     email TEXT NOT NULL UNIQUE,
     senha TEXT NOT NULL,
     idioma TEXT NOT NULL,
+    fotoPerfil VARCHAR,
     dataNascimento DATE,
     statusConta TEXT DEFAULT 'ativo',
     statusLogin BOOLEAN DEFAULT FALSE

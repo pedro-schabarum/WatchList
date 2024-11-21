@@ -1,8 +1,8 @@
-import { GlobalContext } from "../../../../contexts/GlobalContext";
+import { GlobalContext } from "../../contexts/GlobalContext";
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 import styles from "./estilos";
-import { fetchCategorias } from "../../../../servicos/api/tmdb";
+import { fetchCategorias } from "../../servicos/api/tmdb";
 
 export default function Categorias({
   categoriaSelecionada,

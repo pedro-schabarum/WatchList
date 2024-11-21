@@ -13,6 +13,7 @@ import { CommonActions } from "@react-navigation/native";
 import styles from "./estilos";
 // import { getRequestToken, redirectToAuthPage, getAccessTokenAndSessionId, isTokenExpired, authenticateUser} from '../../servicos/api/tmdb'
 import { GlobalContext } from "../../contexts/GlobalContext";
+import i18n from "../../hooks/I18n";
 
 export default function Cadastro({ navigation }) {
   const [nome, onChangeNome] = useState("");
@@ -49,7 +50,7 @@ export default function Cadastro({ navigation }) {
 
     try {
       if (db) {
-        const insercao = await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
+        await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
         Alert.alert("Sucesso", "Usuário salvo com sucesso!");
         const resultado = await getUserLogado(db); // Usa `database` diretamente aqui
         setUsuario(resultado);
@@ -68,7 +69,7 @@ export default function Cadastro({ navigation }) {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Text style={styles.texto}>Cadastrar</Text>
+        <Text style={styles.texto}>{i18n.t("cadastrar")}</Text>
 
         <TextInput
           style={styles.input}

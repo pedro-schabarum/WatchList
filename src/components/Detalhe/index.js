@@ -8,12 +8,12 @@ import {
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import styles from "./estlios";
-import Elenco from "./Elenco";
-import Temporadas from "./Temporadas";
-import add from "../../../../assets/plus.png";
-import { fetchDetalhesConteudo } from "../../../../servicos/api/tmdb";
-import { GlobalContext } from "../../../../contexts/GlobalContext";
-import AdicionarLista from "./AdicionarLista";
+import Elenco from "../Elenco";
+import Temporadas from "../Temporadas";
+import add from "../../assets/plus.png";
+import { fetchDetalhesConteudo } from "../../servicos/api/tmdb";
+import { GlobalContext } from "../../contexts/GlobalContext";
+import AdicionarLista from "../AdicionarLista";
 
 const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
   const { idioma, isSeries, options } = useContext(GlobalContext);

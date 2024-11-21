@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Image, TouchableOpacity } from "react-native";
 import PaginaBase from "../PaginaBase";
-import Cabecalho from "./Cabecalho/Pesquisa";
-import Categorias from "./Cabecalho/Categorias";
-import Lista from "./Lista";
+import Pesquisa from "../../components/Pesquisa";
+import Categorias from "../../components/Categorias";
+import Lista from "../../components/Lista";
 import styles from "./estilos";
 import filmeImage from "../../assets/movies.png";
 import serieImage from "../../assets/series.png";
 import { fetchConteudos } from "../../servicos/api/tmdb";
-
 import { GlobalContext } from "../../contexts/GlobalContext";
 
 export default function Catalogo({ navigation }) {
   const { idioma, isSeries, setIsSeries, options } = useContext(GlobalContext);
-
   const [conteudos, setConteudos] = useState([]);
   const [pagina, setPagina] = useState(1);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
@@ -87,7 +85,7 @@ export default function Catalogo({ navigation }) {
   return (
     <PaginaBase>
       <View>
-        <Cabecalho
+        <Pesquisa
           value={searchText}
           onChangeText={setSearchText}
           onSearch={handleSearch}

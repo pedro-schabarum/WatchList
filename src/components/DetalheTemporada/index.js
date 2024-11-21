@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import { GlobalContext } from "../../../../../../contexts/GlobalContext";
+import { GlobalContext } from "../../contexts/GlobalContext";
 import styles from "./estlios";
-import { fetchDetalhesTemporadas } from "../../../../../../servicos/api/tmdb";
-import AdicionarLista from "../../AdicionarLista";
+import { fetchDetalhesTemporadas } from "../../servicos/api/tmdb";
+import AdicionarLista from "../AdicionarLista";
 
 const DetalheTemporada = ({ id, temporada }) => {
   const { idioma, options } = useContext(GlobalContext);
