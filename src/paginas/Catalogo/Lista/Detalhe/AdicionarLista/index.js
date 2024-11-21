@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import { GlobalContext } from "../../../../../contexts/GlobalContext";
 
@@ -33,33 +34,40 @@ const AdicionarLista = ({ visible, onClose, item }) => {
           <>
             {isSeries && (
               <>
-                <Image
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w500${item.still_path}`,
-                  }}
-                  style={styles.episodeImage}
-                />
-                <Text style={styles.episodeTitle}>{item.name}</Text>
-                <Text
-                  style={styles.episodeNumber}
-                >{`Episódio ${item.episode_number}`}</Text>
-                <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
-                  item.air_date
-                ).toLocaleDateString(idioma, {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}`}</Text>
-                {item.overview && (
-                  <Text style={styles.episodeOverview}>{item.overview}</Text>
+                {item.still_path && (
+                  <Image
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w500${item.still_path}`,
+                    }}
+                    style={styles.episodeImage}
+                  />
                 )}
-                {duracaoFormatada.length > 0 ? (
-                  <Text style={styles.modalDuracao}>
-                    Duração: {duracaoFormatada}
-                  </Text>
-                ) : (
-                  <></>
-                )}
+                <ScrollView
+                  style={styles.scrollView}
+                  contentContainerStyle={styles.scrollContent}
+                >
+                  <Text style={styles.episodeTitle}>{item.name}</Text>
+                  <Text
+                    style={styles.episodeNumber}
+                  >{`Episódio ${item.episode_number}`}</Text>
+                  <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
+                    item.air_date
+                  ).toLocaleDateString(idioma, {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}`}</Text>
+                  {item.overview && (
+                    <Text style={styles.episodeOverview}>{item.overview}</Text>
+                  )}
+                  {duracaoFormatada.length > 0 ? (
+                    <Text style={styles.modalDuracao}>
+                      Duração: {duracaoFormatada}
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
+                </ScrollView>
               </>
             )}
 
@@ -87,6 +95,12 @@ const AdicionarLista = ({ visible, onClose, item }) => {
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    maxHeight: "50%",
+  },
+  scrollContent: {
+    padding: 16,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -96,6 +110,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "90%",
+    maxHeight: "90%",
     // paddingTop: 20,
     backgroundColor: "#121011",
     borderRadius: 10,

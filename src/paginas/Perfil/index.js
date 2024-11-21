@@ -13,6 +13,7 @@ import styles from "./estilos";
 import { fetchDetalhePessoa } from "../../servicos/api/tmdb";
 import { updateUserIdioma } from "../../servicos/db/db";
 import Detalhe from "../Catalogo/Lista/Detalhe";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const ProfileScreen = ({ navigation, route }) => {
   const { tipoUsuario, integranteId } = route.params;

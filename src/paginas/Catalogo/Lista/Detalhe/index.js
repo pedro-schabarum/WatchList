@@ -124,7 +124,8 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
                 isFilme={isFilme}
               />
             </ScrollView>
-            {!isSeries && (
+            {((origem == "elenco" && isFilme) ||
+              (!isSeries && origem == "catalogo")) && (
               <TouchableOpacity
                 style={styles.adicionar}
                 onPress={() => {

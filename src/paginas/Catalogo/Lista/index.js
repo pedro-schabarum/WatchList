@@ -45,6 +45,7 @@ const Lista = ({ conteudos, handleLoadMore }) => {
       <Detalhe
         itemSelecionado={itemSelecionado}
         onClose={() => setItemSelecionado(null)}
+        origem={"catalogo"}
       />
     </View>
   );
