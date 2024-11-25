@@ -21,7 +21,6 @@ export default function Home({ navigation }) {
   const handleNavigate = async () => {
     navigation.dispatch(
       CommonActions.reset({
-        index: 0,
         routes: [{ name: "Catalogo" }], // Mude 'Home' para o nome da sua tela inicial
       })
     );

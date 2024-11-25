@@ -18,7 +18,7 @@ const i18n = new I18n({
 });
 
 // Detectando o idioma local do dispositivo
-const deviceLanguage = Localization.locale || "en-US"; // Obtendo o idioma local com Expo
+const deviceLanguage = Localization.getLocales().languageTag || "en-US"; // Obtendo o idioma local com Expo
 
 // Configurando o idioma do i18n
 i18n.locale = deviceLanguage;
