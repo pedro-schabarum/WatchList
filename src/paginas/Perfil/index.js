@@ -13,7 +13,7 @@ import styles from "./estilos";
 import { fetchDetalhePessoa } from "../../servicos/api/tmdb";
 import { updateUserIdioma } from "../../servicos/db/db";
 import Detalhe from "../../components/Detalhe";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import i18n from "../../hooks/I18n";
 
 const ProfileScreen = ({ navigation, route }) => {
   const { tipoUsuario, integranteId } = route.params;
@@ -39,6 +39,12 @@ const ProfileScreen = ({ navigation, route }) => {
     setPessoa([]);
     tipoUsuario == 2 ? fetchData() : null;
   }, [integranteId]);
+
+  useEffect(() => {
+    if (idioma) {
+      i18n.locale = idioma; // Atualiza o idioma no i18n
+    }
+  }, [idioma]);
 
   const fetchData = async () => {
     try {

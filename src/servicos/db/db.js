@@ -1,5 +1,6 @@
 import * as SQLite from "expo-sqlite";
 import * as FileSystem from "expo-file-system";
+import { useI18n } from "../../hooks/useI18n";
 
 const dbPath = `${FileSystem.documentDirectory}SQLite/WatchList.db`;
 

@@ -3,6 +3,7 @@ import React, { useState, useContext, useCallback } from "react";
 import styles from "./estilos";
 import Detalhe from "../Detalhe";
 import { GlobalContext } from "../../contexts/GlobalContext";
+import i18n from "../../hooks/I18n";
 
 const Lista = ({ conteudos, handleLoadMore }) => {
   const { isSeries } = useContext(GlobalContext);
@@ -22,7 +23,9 @@ const Lista = ({ conteudos, handleLoadMore }) => {
         <Text style={styles.titulo}>{isSeries ? item.name : item.title}</Text>
         {/* <Text style={styles.diretor}>Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}</Text> */}
         <Text style={styles.diretor}>
-          Média de avaliação: {item.vote_average.toFixed(1) || "Indisponível"}
+          {`${i18n.t("mediaAvaliacao")}: ${
+            item.vote_average.toFixed(1) || "Indisponível"
+          }`}
         </Text>
       </TouchableOpacity>
     ),

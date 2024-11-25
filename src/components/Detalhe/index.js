@@ -14,6 +14,7 @@ import add from "../../assets/plus.png";
 import { fetchDetalhesConteudo } from "../../servicos/api/tmdb";
 import { GlobalContext } from "../../contexts/GlobalContext";
 import AdicionarLista from "../AdicionarLista";
+import i18n from "../../hooks/I18n";
 
 const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
   const { idioma, isSeries, options } = useContext(GlobalContext);
@@ -107,14 +108,15 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
               )}
               {duracaoFormatada.length > 0 ? (
                 <Text style={styles.modalDuracao}>
-                  Duração {isSeries ? "por episódio" : ""}: {duracaoFormatada}
+                  {i18n.t("duracao")} {isSeries ? "por episódio" : ""}:{" "}
+                  {duracaoFormatada}
                 </Text>
               ) : (
                 ""
               )}
               {detalhes.seasons && <Temporadas detalhes={detalhes} />}
               <Text style={styles.modalCategorias}>
-                Categorias:{" "}
+                {i18n.t("categorias")}:{" "}
                 {detalhes.genres.map((genre) => genre.name).join(", ")}
               </Text>
               <Elenco
@@ -145,7 +147,7 @@ const Detalhe = ({ itemSelecionado, onClose, isFilme, origem }) => {
               />
             )}
             <TouchableOpacity style={styles.modalButton} onPress={onClose}>
-              <Text style={styles.textoBotao}>Fechar</Text>
+              <Text style={styles.textoBotao}>{i18n.t("fechar")}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -18,8 +18,6 @@ export default function Home({ navigation }) {
   const { usuario, setUsuario, setDb, setIdioma, idioma } =
     useContext(GlobalContext);
 
-  useI18n(idioma);
-
   const handleNavigate = async () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -39,7 +37,6 @@ export default function Home({ navigation }) {
       console.log(resultado);
       setUsuario(resultado);
     };
-
     setupDatabase();
     // clearDatabaseFile(); // Remova ou adicione aqui se realmente for necessário
   }, []);
@@ -54,6 +51,12 @@ export default function Home({ navigation }) {
       }
     }
   }, [usuario]); // Dependência no estado `usuario`
+
+  useEffect(() => {
+    if (idioma) {
+      i18n.locale = idioma; // Atualiza o idioma no i18n
+    }
+  }, [idioma]);
 
   return (
     <View style={styles.container}>

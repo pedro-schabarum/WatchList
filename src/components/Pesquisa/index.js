@@ -1,12 +1,13 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import styles from "./estilos";
+import i18n from "../../hooks/I18n";
 
 const Cabecalho = ({ value, onChangeText, onSearch, navigation }) => (
   <View style={styles.Pesquisa}>
     <TextInput
       style={styles.barraPesquisa}
-      placeholder="Buscar..."
+      placeholder={`${i18n.t("buscar")}...`}
       placeholderTextColor={"#575757"}
       value={value}
       onChangeText={onChangeText}

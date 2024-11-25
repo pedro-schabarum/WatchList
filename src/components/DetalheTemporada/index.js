@@ -4,6 +4,7 @@ import { GlobalContext } from "../../contexts/GlobalContext";
 import styles from "./estlios";
 import { fetchDetalhesTemporadas } from "../../servicos/api/tmdb";
 import AdicionarLista from "../AdicionarLista";
+import i18n from "../../hooks/I18n";
 
 const DetalheTemporada = ({ id, temporada }) => {
   const { idioma, options } = useContext(GlobalContext);
@@ -41,12 +42,12 @@ const DetalheTemporada = ({ id, temporada }) => {
         }}
       >
         <Text style={styles.assistido.episodeTitle}>{item.name}</Text>
-        <Text
-          style={styles.assistido.episodeNumber}
-        >{`Episódio ${item.episode_number}`}</Text>
-        <Text style={styles.assistido.episodeDate}>{`Lançamento: ${new Date(
-          item.air_date
-        ).toLocaleDateString(idioma, {
+        <Text style={styles.assistido.episodeNumber}>{`${i18n.t("episodio")} ${
+          item.episode_number
+        }`}</Text>
+        <Text style={styles.assistido.episodeDate}>{`${i18n.t(
+          "lancamento"
+        )}: ${new Date(item.air_date).toLocaleDateString(idioma, {
           day: "2-digit",
           month: "long",
           year: "numeric",

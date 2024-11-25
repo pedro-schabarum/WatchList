@@ -75,7 +75,7 @@ export default function Cadastro({ navigation }) {
           style={styles.input}
           onChangeText={onChangeNome}
           value={nome}
-          placeholder="Nome"
+          placeholder={i18n.t("nome")}
           placeholderTextColor={"#575757"}
         />
 
@@ -83,7 +83,7 @@ export default function Cadastro({ navigation }) {
           style={styles.input}
           onChangeText={onChangeEmail}
           value={email}
-          placeholder="E-mail"
+          placeholder={i18n.t("email")}
           placeholderTextColor={"#575757"}
           keyboardType="email-address" // Sugere o tipo de teclado adequado para emails
           autoCapitalize="none"
@@ -93,7 +93,7 @@ export default function Cadastro({ navigation }) {
           style={styles.input}
           onChangeText={onChangeSenha}
           value={senha}
-          placeholder="Crie sua senha"
+          placeholder={i18n.t("criarSenha")}
           placeholderTextColor={"#575757"}
         />
 
@@ -101,7 +101,7 @@ export default function Cadastro({ navigation }) {
           style={styles.input}
           onChangeText={onChangeConfirmaSenha}
           value={confirmaSenha}
-          placeholder="Confirme a senha"
+          placeholder={i18n.t("confirmaSenha")}
           placeholderTextColor={"#575757"}
         />
 

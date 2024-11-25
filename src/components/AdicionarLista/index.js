@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import styles from "./estilos";
 import { GlobalContext } from "../../contexts/GlobalContext";
+import i18n from "../../hooks/I18n";
 
 const AdicionarLista = ({ visible, onClose, item }) => {
   const { isSeries, idioma } = useContext(GlobalContext);
@@ -47,12 +48,12 @@ const AdicionarLista = ({ visible, onClose, item }) => {
                   contentContainerStyle={styles.scrollContent}
                 >
                   <Text style={styles.episodeTitle}>{item.name}</Text>
-                  <Text
-                    style={styles.episodeNumber}
-                  >{`Episódio ${item.episode_number}`}</Text>
-                  <Text style={styles.episodeDate}>{`Lançamento: ${new Date(
-                    item.air_date
-                  ).toLocaleDateString(idioma, {
+                  <Text style={styles.episodeNumber}>{`${i18n.t("episodio")} ${
+                    item.episode_number
+                  }`}</Text>
+                  <Text style={styles.episodeDate}>{`${i18n.t(
+                    "lancamento"
+                  )}: ${new Date(item.air_date).toLocaleDateString(idioma, {
                     day: "2-digit",
                     month: "long",
                     year: "numeric",
@@ -62,7 +63,7 @@ const AdicionarLista = ({ visible, onClose, item }) => {
                   )}
                   {duracaoFormatada.length > 0 ? (
                     <Text style={styles.modalDuracao}>
-                      Duração: {duracaoFormatada}
+                      {i18n.t("duracao")}: {duracaoFormatada}
                     </Text>
                   ) : (
                     <></>
@@ -73,11 +74,11 @@ const AdicionarLista = ({ visible, onClose, item }) => {
 
             {!isSeries && (
               <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Interesses</Text>
+                <Text style={styles.buttonText}>{i18n.t("interesses")}</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Assistidos</Text>
+              <Text style={styles.buttonText}>{i18n.t("assistidos")}</Text>
             </TouchableOpacity>
           </>
           <TouchableOpacity
@@ -86,7 +87,7 @@ const AdicionarLista = ({ visible, onClose, item }) => {
               onClose();
             }}
           >
-            <Text style={styles.buttonText}>Fechar</Text>
+            <Text style={styles.buttonText}>{i18n.t("fechar")}</Text>
           </TouchableOpacity>
         </View>
       </View>
