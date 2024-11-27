@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     maxHeight: "90%",
     backgroundColor: "#121011",
     borderRadius: 10,
-    alignItems: "center",
+    // alignItems: "center",
   },
   adicionar: {
     width: 50, // Defina a largura (ajuste para o tamanho desejado)

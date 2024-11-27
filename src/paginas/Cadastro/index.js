@@ -59,6 +59,7 @@ export default function Cadastro({ navigation }) {
         Alert.alert("Erro", "Banco de dados não inicializado");
       }
     } catch (error) {
+      // console.log(error);
       Alert.alert("Erro", "Erro ao salvar usuário");
     }
   };

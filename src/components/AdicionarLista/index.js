@@ -10,9 +10,10 @@ import {
 import styles from "./estilos";
 import { GlobalContext } from "../../contexts/GlobalContext";
 import i18n from "../../hooks/I18n";
+import { adicionarLista } from "../../servicos/api/back";
 
 const AdicionarLista = ({ visible, onClose, item }) => {
-  const { isSeries, idioma } = useContext(GlobalContext);
+  const { isSeries, idioma, usuario } = useContext(GlobalContext);
   console.log(item);
 
   const duracaoMinutos = item.runtime;
@@ -73,7 +74,12 @@ const AdicionarLista = ({ visible, onClose, item }) => {
             )}
 
             {!isSeries && (
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  adicionarLista({ usuario, item });
+                }}
+              >
                 <Text style={styles.buttonText}>{i18n.t("interesses")}</Text>
               </TouchableOpacity>
             )}
