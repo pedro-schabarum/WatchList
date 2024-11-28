@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import PaginaBase from "../PaginaBase";
-import { getUser, initializeDatabase, getAllUsers } from "../../servicos/db/db";
+import { getUser, initializeDatabase, insertUser } from "../../servicos/db/db";
 import { CommonActions } from "@react-navigation/native";
 import styles from "./estilos";
 import i18n from "../../hooks/I18n";
@@ -29,7 +29,6 @@ export default function Home({ navigation }) {
   }, []);
 
   const handleNavigate = async () => {
-    const userData = await getAllUsers(db); // função que busca os dados
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -45,9 +44,19 @@ export default function Home({ navigation }) {
     }
     try {
       if (db) {
-        const user = await getUser(db, email, senha); // Chama a função para inserir usuário
+        const user = await getUser(email, senha); // Chama a função para inserir usuário
+        console.log(user);
         if (user) {
-          handleNavigate(); // Navega para a tela Catalogo após salvar
+          let userData = await insertUser(
+            db,
+            user.id,
+            user.nome,
+            user.email,
+            false,
+            user.idioma,
+            false
+          );
+          handleNavigate(userData); // Navega para a tela Catalogo após salvar
         } else {
           Alert.alert("Erro", "Não foi possivel iniciar sessão");
         }

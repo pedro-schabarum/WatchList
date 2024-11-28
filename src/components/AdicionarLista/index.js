@@ -77,7 +77,7 @@ const AdicionarLista = ({ visible, onClose, item }) => {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  adicionarLista({ usuario, item });
+                  adicionarLista({ usuario, item, tipo: "Interesses" });
                 }}
               >
                 <Text style={styles.buttonText}>{i18n.t("interesses")}</Text>

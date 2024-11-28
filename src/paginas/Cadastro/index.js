@@ -50,7 +50,7 @@ export default function Cadastro({ navigation }) {
 
     try {
       if (db) {
-        await insertUser(db, nome, email, senha, idioma); // Chama a função para inserir usuário
+        await insertUser(db, nome, email, senha, idioma, true); // Chama a função para inserir usuário
         Alert.alert("Sucesso", "Usuário salvo com sucesso!");
         const resultado = await getUserLogado(db); // Usa `database` diretamente aqui
         setUsuario(resultado);
