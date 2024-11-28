@@ -89,16 +89,17 @@ export const updateIdioma = async ({ usuario }) => {
 //--//--//--//--//--//--//--//Funcoes para as listas//--//--//--//--//--//--//--//
 
 export const adicionarLista = async ({ usuario, item, tipo }) => {
+  console.log("pasando itens ", usuario, item, tipo);
   try {
-    const response = await fetch(`${endpoint}/api/inserList`, {
+    const response = await fetch(`${endpoint}api/insertList`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: usuario.email,
-        item: item,
-        tipo: tipo,
+        item: parseInt(item.id),
+        tipo: parseInt(tipo),
       }),
     });
 
@@ -106,8 +107,7 @@ export const adicionarLista = async ({ usuario, item, tipo }) => {
     if (!response.ok) {
       throw new Error("Falha ao salvar o usuário");
     }
-
-    return true;
+    return;
   } catch (error) {
     console.error("Erro ao salvar o usuário:", error);
     throw error; // Re-throwing the error to propagate it

@@ -74,18 +74,28 @@ const AdicionarLista = ({ visible, onClose, item }) => {
             )}
 
             {!isSeries && (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  adicionarLista({ usuario, item, tipo: "Interesses" });
-                }}
-              >
-                <Text style={styles.buttonText}>{i18n.t("interesses")}</Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    adicionarLista({ usuario, item, tipo: 1 });
+                    onClose();
+                  }}
+                >
+                  <Text style={styles.buttonText}>{i18n.t("interesses")}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    adicionarLista({ usuario, item, tipo: 2 });
+                    onClose();
+                  }}
+                >
+                  <Text style={styles.buttonText}>{i18n.t("assistidos")}</Text>
+                </TouchableOpacity>
+              </>
             )}
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>{i18n.t("assistidos")}</Text>
-            </TouchableOpacity>
           </>
           <TouchableOpacity
             style={styles.modalButton}
