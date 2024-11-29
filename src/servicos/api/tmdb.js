@@ -138,12 +138,7 @@ export const fetchCategorias = async ({ endpoint, idioma, options }) => {
 };
 
 // Pegando detalhes
-export const fetchDetalhesConteudo = async ({
-  endpoint,
-  filmeId,
-  idioma,
-  options,
-}) => {
+export const fetchDetalhesConteudo = async ({ endpoint, filmeId, idioma }) => {
   try {
     const response = await fetch(
       `${API_URL}/${endpoint}/${filmeId}?&language=${idioma}`,

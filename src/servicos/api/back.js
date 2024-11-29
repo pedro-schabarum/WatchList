@@ -91,7 +91,7 @@ export const updateIdioma = async ({ usuario }) => {
 export const adicionarLista = async ({ usuario, item, tipo }) => {
   console.log("pasando itens ", usuario, item, tipo);
   try {
-    const response = await fetch(`${endpoint}api/insertList`, {
+    const response = await fetch(`${endpoint}api/insertMovies`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -108,6 +108,30 @@ export const adicionarLista = async ({ usuario, item, tipo }) => {
       throw new Error("Falha ao salvar o usuário");
     }
     return;
+  } catch (error) {
+    console.error("Erro ao salvar o usuário:", error);
+    throw error; // Re-throwing the error to propagate it
+  }
+};
+
+export const fetchFilmesUsuarios = async ({ usuario }) => {
+  console.log("pasando itens ", usuario);
+  try {
+    const response = await fetch(`${endpoint}api/getMovies`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: usuario.email,
+      }),
+    });
+
+    // Verifique se a resposta foi bem-sucedida
+    if (!response.ok) {
+      throw new Error("Falha ao salvar o usuário");
+    }
+    return response.json();
   } catch (error) {
     console.error("Erro ao salvar o usuário:", error);
     throw error; // Re-throwing the error to propagate it
